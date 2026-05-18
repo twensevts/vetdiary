@@ -37,6 +37,31 @@ class PostController {
             res.status(500).json({ message: 'Ошибка при получении постов' });
         }
     }
+
+    async deletePost(req, res) {
+        try {
+            const { id } = req.params;
+            const userId = req.user.id;
+            const userRole = req.user.role;
+
+            const post = await db.query('SELECT id, author_id FROM Post WHERE id = $1', [id]);
+            if (post.rows.length === 0) {
+                return res.status(404).json({ message: 'Пост не найден' });
+            }
+
+            const isAuthor = Number(post.rows[0].author_id) === Number(userId);
+            const isAdmin = userRole === 'admin';
+
+            if (!isAuthor && !isAdmin) {
+                return res.status(403).json({ message: 'Недостаточно прав для удаления поста' });
+            }
+
+            await db.query('DELETE FROM Post WHERE id = $1', [id]);
+            return res.json({ message: 'Пост удален' });
+        } catch (e) {
+            return res.status(500).json({ message: 'Ошибка при удалении поста' });
+        }
+    }
 }
 
 module.exports = new PostController();

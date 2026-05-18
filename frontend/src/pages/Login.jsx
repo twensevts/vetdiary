@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Login() {
@@ -58,6 +58,10 @@ export default function Login() {
                     Войти
                 </button>
             </form>
+
+            <p style={{ marginTop: '16px', textAlign: 'center', fontSize: '14px', color: 'var(--text-muted)' }}>
+                Нет аккаунта? <Link to="/register" style={{ color: 'var(--primary-color)' }}>Зарегистрироваться</Link>
+            </p>
         </div>
     );
 }

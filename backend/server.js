@@ -10,6 +10,7 @@ const authRoutes = require('./routes/authRoutes');
 const petRoutes = require('./routes/petRoutes');
 const postRoutes = require('./routes/postRoutes');
 const careEventRoutes = require('./routes/careEventRoutes');
+const petDocumentRoutes = require('./routes/petDocumentRoutes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/pets', petRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/care-events', careEventRoutes);
+app.use('/api/pets', petDocumentRoutes);
 
 const PORT = process.env.PORT || 5000;
 

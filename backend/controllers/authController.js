@@ -12,6 +12,16 @@ class AuthController {
         try {
             const { username, email, password, role } = req.body;
 
+            if (!username || !email || !password) {
+                return res.status(400).json({ message: 'Имя пользователя, email и пароль обязательны' });
+            }
+
+            const allowedRoles = ['owner', 'vet', 'admin'];
+            const normalizedRole = role || 'owner';
+            if (!allowedRoles.includes(normalizedRole)) {
+                return res.status(400).json({ message: 'Некорректная роль пользователя' });
+            }
+
             // Проверка, существует ли пользователь
             const candidate = await db.query('SELECT * FROM "User" WHERE email = $1', [email]);
             if (candidate.rows.length > 0) {
@@ -24,7 +34,7 @@ class AuthController {
             // Сохранение в БД
             const newUser = await db.query(
                 `INSERT INTO "User" (username, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id, role`,
-                [username, email, hashPassword, role || 'owner']
+                [username, email, hashPassword, normalizedRole]
             );
 
             return res.status(201).json({ message: "Пользователь успешно зарегистрирован" });
@@ -37,6 +47,10 @@ class AuthController {
     async login(req, res) {
         try {
             const { email, password } = req.body;
+
+            if (!email || !password) {
+                return res.status(400).json({ message: 'Email и пароль обязательны' });
+            }
 
             const user = await db.query('SELECT * FROM "User" WHERE email = $1', [email]);
             if (user.rows.length === 0) {

@@ -9,7 +9,12 @@ export default function AddPetModal({ isOpen, onClose, onPetAdded }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/pets', formData, {
+            const payload = {
+                ...formData,
+                weight: formData.weight === '' ? null : Number(formData.weight)
+            };
+
+            await axios.post('http://localhost:5000/api/pets', payload, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             onPetAdded(); // Обновляем список на главном экране

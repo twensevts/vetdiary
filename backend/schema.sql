@@ -1,0 +1,59 @@
+CREATE TABLE IF NOT EXISTS "User" (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'owner',
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS Pet (
+    id SERIAL PRIMARY KEY,
+    owner_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    species VARCHAR(100) NOT NULL,
+    breed VARCHAR(255),
+    weight DOUBLE PRECISION,
+    birth_date DATE,
+    health_notes TEXT,
+    photo_url TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS Post (
+    id SERIAL PRIMARY KEY,
+    author_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+    pet_id INTEGER REFERENCES Pet(id) ON DELETE SET NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS PostComment (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
+    author_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS CareEvent (
+    id SERIAL PRIMARY KEY,
+    pet_id INTEGER NOT NULL REFERENCES Pet(id) ON DELETE CASCADE,
+    event_type VARCHAR(50) NOT NULL,
+    event_date DATE NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS PetDocument (
+    id SERIAL PRIMARY KEY,
+    pet_id INTEGER NOT NULL REFERENCES Pet(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    document_type VARCHAR(100),
+    file_name VARCHAR(255) NOT NULL,
+    file_data TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
