@@ -195,29 +195,29 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            {/* Блок напоминаний */}
-            {upcomingReminders.length > 0 && (
-                <div className="card" style={{ background: '#FEF3C7', border: '1px solid #F59E0B' }}>
-                    <div className="card-header" style={{ color: '#92400E', marginBottom: '8px' }}>
-                        🔔 Напоминания на ближайшие 7 дней
+    {/* Блок напоминаний */}
+    {upcomingReminders.length > 0 && (
+        <div className="card" style={{ background: '#FEF3C7', border: '1px solid #F59E0B' }}>
+            <div className="card-header" style={{ color: '#92400E', marginBottom: '8px' }}>
+                Важное уведомление
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {upcomingReminders.map((event) => (
+                    <div key={event.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '10px 14px', borderRadius: '8px' }}>
+                        <div>
+                            <strong>{event.pet_name}</strong>
+                            <span style={{ marginLeft: '8px', color: 'var(--text-muted)' }}>
+                                {eventLabelMap[event.event_type] || event.event_type}
+                            </span>
+                        </div>
+                        <div style={{ color: '#92400E', fontWeight: '500' }}>
+                            {new Date(event.event_date).toLocaleDateString('ru-RU')}
+                        </div>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {upcomingReminders.map((event) => (
-                            <div key={event.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '10px 14px', borderRadius: '8px' }}>
-                                <div>
-                                    <strong>{event.pet_name}</strong>
-                                    <span style={{ marginLeft: '8px', color: 'var(--text-muted)' }}>
-                                        {eventLabelMap[event.event_type] || event.event_type}
-                                    </span>
-                                </div>
-                                <div style={{ color: '#92400E', fontWeight: '500' }}>
-                                    {new Date(event.event_date).toLocaleDateString('ru-RU')}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
+                ))}
+            </div>
+        </div>
+    )}
 
             <div className="widgets-grid">
                 <div className="card">

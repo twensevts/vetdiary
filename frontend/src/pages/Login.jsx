@@ -25,11 +25,11 @@ export default function Login() {
     };
 
     return (
-        <div className="card" style={{ maxWidth: '440px', margin: '60px auto', padding: '30px' }}>
-            <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Вход в систему</h2>
+        <div className="card login-card" style={{ maxWidth: '480px', margin: '60px auto' }}>
+            <h2 style={{ textAlign: 'center', marginBottom: '18px' }}>Вход в систему</h2>
 
-            {/* Плашка выбора роли */}
-            <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-color)', marginBottom: '20px' }}>
+            {/* Role switch */}
+            <div style={{ display: 'flex', borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(15,23,42,0.04)', marginBottom: 18 }}>
                 <button
                     type="button"
                     onClick={() => setLoginMode('owner')}
@@ -38,14 +38,13 @@ export default function Login() {
                         padding: '12px',
                         border: 'none',
                         cursor: 'pointer',
-                        fontWeight: '600',
-                        fontSize: '14px',
-                        background: loginMode === 'owner' ? 'var(--primary-color)' : '#f9fafb',
-                        color: loginMode === 'owner' ? '#fff' : 'var(--text-muted)',
-                        transition: '0.2s'
+                        fontWeight: 600,
+                        fontSize: 14,
+                        background: loginMode === 'owner' ? 'linear-gradient(90deg,var(--primary-500),var(--primary-600))' : 'transparent',
+                        color: loginMode === 'owner' ? '#fff' : 'var(--muted-700)'
                     }}
                 >
-                    Владелец животного
+                    Владелец
                 </button>
                 <button
                     type="button"
@@ -54,13 +53,11 @@ export default function Login() {
                         flex: 1,
                         padding: '12px',
                         border: 'none',
-                        borderLeft: '1px solid var(--border-color)',
                         cursor: 'pointer',
-                        fontWeight: '600',
-                        fontSize: '14px',
-                        background: loginMode === 'vet' ? '#3b82f6' : '#f9fafb',
-                        color: loginMode === 'vet' ? '#fff' : 'var(--text-muted)',
-                        transition: '0.2s'
+                        fontWeight: 600,
+                        fontSize: 14,
+                        background: loginMode === 'vet' ? 'linear-gradient(90deg,#60a5fa,#3b82f6)' : 'transparent',
+                        color: loginMode === 'vet' ? '#fff' : 'var(--muted-700)'
                     }}
                 >
                     Ветеринар
@@ -68,48 +65,48 @@ export default function Login() {
             </div>
 
             {loginMode === 'vet' && (
-                <div style={{ background: '#DBEAFE', color: '#1E40AF', padding: '10px 14px', borderRadius: '6px', marginBottom: '15px', fontSize: '13px' }}>
-                    Для входа как ветеринар ваш аккаунт должен быть подтверждён администратором. Если вы ещё не зарегистрированы — <Link to="/register" style={{ color: '#1E40AF', fontWeight: '600' }}>создайте аккаунт</Link> с ролью "Ветеринар" и загрузите подтверждающий документ.
+                <div className="alert alert-info" style={{ marginBottom: 14, background: 'linear-gradient(180deg,#EFF6FF,#DBEAFE)', color: '#1E40AF', padding: '10px 12px', borderRadius: 8 }}>
+                    Для входа как ветеринар ваш аккаунт должен быть подтверждён администратором. Если вы ещё не зарегистрированы — <Link to="/register" style={{ color: '#1E40AF', fontWeight: 600 }}>создайте аккаунт</Link> с ролью "Ветеринар" и загрузите документ.
                 </div>
             )}
 
             {error && (
-                <div style={{ background: '#FEE2E2', color: '#991B1B', padding: '10px', borderRadius: '6px', marginBottom: '15px', fontSize: '14px' }}>
-                    {error}
-                </div>
+                <div className="alert alert-error" style={{ marginBottom: 14 }}>{error}</div>
             )}
 
-            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div>
-                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: '500' }}>Email</label>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>Email</label>
                     <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)' }}
+                        className="form-control"
+                        placeholder="you@example.com"
                     />
                 </div>
                 <div>
-                    <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: '500' }}>Пароль</label>
+                    <label style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600 }}>Пароль</label>
                     <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--border-color)' }}
+                        className="form-control"
+                        placeholder="••••••••"
                     />
                 </div>
-                <button type="submit" className="btn btn-primary" style={{ marginTop: '10px', padding: '12px' }}>
+                <button type="submit" className="btn btn-primary" style={{ marginTop: 6, padding: '12px' }}>
                     Войти
                 </button>
             </form>
 
-            <p style={{ marginTop: '16px', textAlign: 'center', fontSize: '14px', color: 'var(--text-muted)' }}>
-                Нет аккаунта? <Link to="/register" style={{ color: 'var(--primary-color)' }}>Зарегистрироваться</Link>
+            <p style={{ marginTop: 14, textAlign: 'center', fontSize: 14, color: 'var(--muted-500)' }}>
+                Нет аккаунта? <Link to="/register" style={{ color: 'var(--primary-600)' }}>Зарегистрироваться</Link>
             </p>
-            <p style={{ marginTop: '10px', textAlign: 'center', fontSize: '14px', color: 'var(--text-muted)' }}>
-                <Link to="/forum" style={{ color: 'var(--primary-color)' }}>Перейти на форум без входа</Link>
+            <p style={{ marginTop: 8, textAlign: 'center', fontSize: 14, color: 'var(--muted-500)' }}>
+                <Link to="/forum" style={{ color: 'var(--primary-600)' }}>Перейти на форум без входа</Link>
             </p>
         </div>
     );

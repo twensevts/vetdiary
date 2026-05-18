@@ -20,21 +20,23 @@ function AppLayout() {
   const shouldShowNavbar = (Boolean(token) && location.pathname !== '/' && location.pathname !== '/register') || (!token && location.pathname === '/forum');
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {shouldShowNavbar && <Navbar />}
-      <main style={{ padding: '30px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/pets" element={<Pets />} />
-          <Route path="/pets/:id" element={<Pets />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/care" element={<Care />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-      </main>
+    <div className="app-hero">
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        {shouldShowNavbar && <Navbar />}
+        <main className="container" style={{ paddingTop: '28px' }}>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/pets" element={<Pets />} />
+            <Route path="/pets/:id" element={<Pets />} />
+            <Route path="/forum" element={<Forum />} />
+            <Route path="/care" element={<Care />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </main>
+      </div>
     </div>
   );
 }

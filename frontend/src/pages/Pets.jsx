@@ -60,9 +60,9 @@ export default function Pets() {
                         <div key={pet.id} className="pet-card" onClick={() => { setSelectedPet(pet); }}>
                             <div className="pet-image-placeholder">
                                 {pet.photo_url ? (
-                                    <img src={pet.photo_url} alt={pet.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={pet.photo_url} alt={pet.name} className="pet-photo" />
                                 ) : (
-                                    getEmoji(pet.species)
+                                    <div className="pet-emoji">{getEmoji(pet.species)}</div>
                                 )}
                             </div>
                             <div className="pet-info">

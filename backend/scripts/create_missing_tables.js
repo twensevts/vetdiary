@@ -29,6 +29,19 @@ async function run() {
       created_at TIMESTAMP NOT NULL DEFAULT NOW()
     )`);
 
+    // Ensure parent_id column exists to support threaded replies
+    try {
+      await db.query(`ALTER TABLE postcomment ADD COLUMN IF NOT EXISTS parent_id INTEGER`);
+    } catch (e) {
+      // ignore if alter fails for any reason
+    }
+
+    try {
+      await db.query(`ALTER TABLE comment ADD COLUMN IF NOT EXISTS parent_id INTEGER`);
+    } catch (e) {
+      // ignore if table 'comment' doesn't exist or alter fails
+    }
+
     console.log('Missing tables created (if any).');
     process.exit(0);
   } catch (e) {

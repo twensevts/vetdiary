@@ -19,26 +19,17 @@ export default function Navbar() {
         navigate('/');
     };
 
-    const navStyle = ({ isActive }) => ({
-        textDecoration: 'none',
-        color: isActive ? 'var(--primary-color)' : 'var(--text-muted)',
-        fontWeight: isActive ? 600 : 500,
-        background: isActive ? '#E6F7F6' : 'transparent',
-        padding: '8px 14px',
-        borderRadius: '6px'
-    });
-
     return (
-        <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'var(--card-bg)', padding: '0 30px', height: '70px', borderBottom: '1px solid var(--border-color)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '30px' }}>
-                <div style={{ fontSize: '18px', fontWeight: '700', color: 'var(--text-color)' }}>🐾 Ветдневник</div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                    {token && <NavLink to="/dashboard" style={navStyle}>Главная</NavLink>}
-                    {token && <NavLink to="/pets" style={navStyle}>Питомцы</NavLink>}
-                    <NavLink to="/forum" style={navStyle}>Форум</NavLink>
-                    {token && <NavLink to="/care" style={navStyle}>Уход</NavLink>}
-                    {token && <NavLink to="/profile" style={navStyle}>Профиль</NavLink>}
-                    {token && userRole === 'admin' && <NavLink to="/admin" style={navStyle}>Админ</NavLink>}
+        <nav className="navbar-glass container" style={{ alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+                <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>🐾 <span style={{ color: 'var(--primary-600)' }}>Ветдневник</span></div>
+                <div className="nav-links">
+                    {token && <NavLink to="/dashboard" className={({isActive}) => `nav-link ${isActive? 'active':''}`}>Главная</NavLink>}
+                    {token && <NavLink to="/pets" className={({isActive}) => `nav-link ${isActive? 'active':''}`}>Питомцы</NavLink>}
+                    <NavLink to="/forum" className={({isActive}) => `nav-link ${isActive? 'active':''}`}>Форум</NavLink>
+                    {token && <NavLink to="/care" className={({isActive}) => `nav-link ${isActive? 'active':''}`}>Уход</NavLink>}
+                    {token && <NavLink to="/profile" className={({isActive}) => `nav-link ${isActive? 'active':''}`}>Профиль</NavLink>}
+                    {token && userRole === 'admin' && <NavLink to="/admin" className={({isActive}) => `nav-link ${isActive? 'active':''}`}>Админ</NavLink>}
                 </div>
             </div>
             <div>

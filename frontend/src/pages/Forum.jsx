@@ -5,12 +5,12 @@ import PetDetailModal from '../components/PetDetailModal';
 function CommentBox({ onSubmit }) {
     const [text, setText] = useState('');
     return (
-        <div style={{ marginTop: 8 }}>
+        <div className="comment-box">
             <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 rows={2}
-                style={{ width: '100%' }}
+                className="form-control"
                 placeholder="Комментировать"
             />
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 6 }}>
@@ -78,10 +78,11 @@ export default function Forum() {
         }
     };
 
-    const handleCreateComment = async (postId, content, resetCb) => {
+    const handleCreateComment = async (postId, content, resetCb, parentId = null) => {
         if (!token) return alert('Войдите, чтобы комментировать');
         try {
-            await axios.post(`http://localhost:5000/api/posts/${postId}/comments`, { content }, {
+            const payload = parentId ? { content, parent_id: parentId } : { content };
+            await axios.post(`http://localhost:5000/api/posts/${postId}/comments`, payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             await fetchComments(postId);
@@ -202,20 +203,18 @@ export default function Forum() {
 
     return (
         <div className="page-container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', gap: '12px', flexWrap: 'wrap' }}>
+            <div className="page-header">
                 <h2>Лента форума</h2>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <div className="search-controls">
                     <input
                         type="text"
-                        className="form-control"
-                        style={{ minWidth: '220px' }}
+                        className="form-control search-input"
                         placeholder="Поиск по постам, авторам и питомцам"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                     />
                     <select
-                        className="form-control"
-                        style={{ minWidth: '140px', width: 'auto' }}
+                        className="form-control search-select"
                         value={speciesFilter}
                         onChange={(e) => setSpeciesFilter(e.target.value)}
                     >
@@ -354,19 +353,79 @@ export default function Forum() {
 
                     <div style={{ marginTop: '12px' }}>
                         <h4 style={{ marginBottom: '8px' }}>Комментарии</h4>
-                        {(commentsMap[post.id] || []).map(c => (
-                            <div key={c.id} style={{ padding: '8px 0', borderTop: '1px solid #eee' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <div><strong>{c.username}</strong> <span className="muted">{new Date(c.created_at).toLocaleString()}</span></div>
-                                    {canDeleteComment(c) && <button className="btn btn-outline" onClick={() => handleDeleteComment(post.id, c.id)}>Удалить</button>}
-                                </div>
-                                <div style={{ marginTop: '6px' }}>{c.content}</div>
-                            </div>
-                        ))}
+                        {(() => {
+                            const flat = commentsMap[post.id] || [];
+                            const MAX_DEPTH = 3;
+                            const buildTree = (list) => {
+                                const map = {};
+                                list.forEach(item => { map[item.id] = { ...item, children: [] }; });
+                                const roots = [];
+                                list.forEach(item => {
+                                    if (item.parent_id) {
+                                        if (map[item.parent_id]) map[item.parent_id].children.push(map[item.id]);
+                                        else roots.push(map[item.id]);
+                                    } else {
+                                        roots.push(map[item.id]);
+                                    }
+                                });
+                                return roots;
+                            };
 
-                        {token && (
-                            <CommentBox onSubmit={(text, reset) => handleCreateComment(post.id, text, reset)} />
-                        )}
+                            const CommentItem = ({ c, depth = 0, onReplyClick = null }) => {
+                                const [showReply, setShowReply] = useState(false);
+                                const [expanded, setExpanded] = useState(depth === 0);
+                                const replyCount = c.children ? c.children.length : 0;
+                                const isNested = depth > 0;
+                                const canNestDeeper = depth < MAX_DEPTH;
+
+                                return (
+                                    <div key={c.id} className={`comment-thread-item ${isNested ? 'comment-thread-item--nested' : ''}`}>
+                                        <div className="comment-author-row">
+                                            <div>
+                                                <span className="comment-author-info">{c.username}</span>
+                                                <span className="comment-timestamp"> {new Date(c.created_at).toLocaleString()}</span>
+                                            </div>
+                                            <div className="comment-actions">
+                                                {token && canNestDeeper && <button className="comment-replies-toggle" onClick={() => setShowReply(s => !s)}>{showReply ? '✕' : '↳'} Ответить</button>}
+                                                {canDeleteComment(c) && <button className="btn btn-outline" style={{ fontSize: '12px', padding: '4px 8px' }} onClick={() => handleDeleteComment(post.id, c.id)}>Удалить</button>}
+                                            </div>
+                                        </div>
+                                        <div className="comment-content">{c.content}</div>
+                                        {showReply && token && canNestDeeper && (
+                                            <div style={{ marginTop: 8, marginBottom: 8 }}>
+                                                <CommentBox onSubmit={(text, reset) => {
+                                                    handleCreateComment(post.id, text, () => { reset(); setShowReply(false); }, c.id);
+                                                }} />
+                                            </div>
+                                        )}
+                                        {replyCount > 0 && (
+                                            <button className="comment-replies-toggle" onClick={() => setExpanded(s => !s)} style={{ marginTop: 6 }}>
+                                                {expanded ? '▼' : '▶'} {replyCount} {replyCount === 1 ? 'ответ' : 'ответов'}
+                                            </button>
+                                        )}
+                                        {expanded && c.children && (
+                                            <div className="comment-thread">
+                                                {c.children.map(child => (
+                                                    <CommentItem key={child.id} c={child} depth={depth + 1} />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            };
+
+                            const roots = buildTree(flat);
+                            return (
+                                <div className="comment-thread">
+                                    {roots.map(r => <CommentItem key={r.id} c={r} depth={0} />)}
+                                    {token && (
+                                        <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(15,23,42,0.04)' }}>
+                                            <CommentBox onSubmit={(text, reset) => handleCreateComment(post.id, text, reset)} />
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })()}
                     </div>
                 </div>
             ))}

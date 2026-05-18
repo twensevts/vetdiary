@@ -308,7 +308,7 @@ export default function PetDetailModal({ pet, onClose }) {
                                 />
                             </div>
                         ) : (
-                            <h3>{currentPet.name}</h3>
+                            <h3 style={{ margin: 0 }}>{currentPet.name}</h3>
                         )}
                         <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
                             {isOwner && (
