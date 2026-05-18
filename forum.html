@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐾 Ветдневник</title>
+    <style>
+        :root {
+            --primary-color: #20B2AA;
+            --bg-color: #f3f4f6;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            padding: 0 30px;
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-item.active {
+            background-color: #e6f7f6;
+            color: var(--primary-color);
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: #f9fafb;
+            color: var(--text-color);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .user-info .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 2px;
+        }
+
+        .user-info .user-role {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .pets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .pets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pet-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .pet-card-header {
+            background-color: var(--primary-color);
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .pet-card-body {
+            padding: 24px;
+        }
+
+        .pet-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .pet-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .pet-actions {
+            display: flex;
+            gap: 16px;
+            font-size: 18px;
+        }
+
+        .action-edit {
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .action-delete {
+            color: #ef4444;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .pet-breed {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .pet-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .pet-stat-label {
+            color: var(--text-muted);
+        }
+
+        .pet-stat-value {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 20px 0;
+        }
+
+        .pet-notes {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .pet-notes span {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-right: 4px;
+        }
+    
+.header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto 25px; /* reset margin to just bottom */
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin: 0;
+            /* remove default h1 top margin that may pull layout */
+            line-height: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #179891;
+        }
+
+        @media (max-width: 700px) {
+            .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto 25px; /* reset margin to just bottom */
+            padding: 0;
+            box-sizing: border-box;
+        }
+        }
+
+        /* Форум */
+        .forum-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Make sure top navbar doesn't overlap content */
+        .navbar {
+            position: relative;
+            z-index: 1;
+        }
+
+        .post-card {
+            background-color: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .post-author-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #E0E0E0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .post-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .post-content {
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        /* Бейдж питомца */
+        .pet-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(32, 178, 170, 0.1);
+            color: var(--primary-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            border: 1px solid rgba(32, 178, 170, 0.3);
+        }
+
+        .pet-badge-icon {
+            font-size: 16px;
+        }
+
+        /* Комментарии */
+        .comments-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .comment {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            background-color: #FAFAFA;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .comment .author-avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+        }
+
+        .comment-content-wrapper {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .vet-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #2E7D32;
+            background-color: #E8F5E9;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #555;
+        }
+    
+</style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo"
+                style="font-size: 18px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 8px;">
+                🐾 Ветдневник</div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <span style="font-size: 16px;">⊞</span> Главная
+                </a>
+                <a href="pet-detail.html" class="nav-item">
+                    <span style="font-size: 16px;">🐶</span> Мои питомцы
+                </a>
+                <a href="forum.html" class="nav-item active">
+                    <span style="font-size: 16px;">💬</span> Форум
+                </a>
+            
+                <a href="care.html" class="nav-item">
+                    <span style="font-size: 16px;">🏥</span> Уход
+                </a>
+            </nav>
+        </div>
+        <div class="nav-right">
+            <div class="user-profile">
+                <div class="user-avatar">К</div>
+                <div class="user-info">
+                    <div class="user-name">Катя</div>
+                    <div class="user-role">Владелец</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content" style="max-width: 1000px; margin: 0 auto; padding: 40px 30px;">
+
+
+
+        <!-- Поиск и Фильтры -->
+        <div class="forum-container">
+            <div class="header">
+                <h1>💬 Форум владельцев</h1>
+                <button class="btn-primary">+ Задать вопрос</button>
+            </div>
+            <div class="forum-controls"
+                style="display: flex; gap: 15px; margin-bottom: 30px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; align-items: center;">
+                <div
+                    style="flex: 1; display: flex; align-items: center; background: #F9FAFB; border-radius: 8px; border: 1px solid #E5E7EB; padding: 0 15px;">
+                    <span style="color: #9CA3AF; font-size: 16px;">🔍</span>
+                    <input type="text" placeholder="Поиск по темам или симптомам..."
+                        style="width: 100%; border: none; background: transparent; padding: 12px 10px; font-size: 15px; outline: none;">
+                </div>
+
+                <div style="display: flex; gap: 10px; border-left: 1px solid #E5E7EB; padding-left: 15px;">
+                    <select
+                        style="padding: 10px 15px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px; background: white; outline: none; cursor: pointer;">
+                        <option>Все животные</option>
+                        <option>Собаки</option>
+                        <option>Кошки</option>
+                    </select>
+                    <select
+                        style="padding: 10px 15px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px; background: white; outline: none; cursor: pointer;">
+                        <option>Сортировка: Новые</option>
+                        <option>Сортировка: Популярные</option>
+                        <option>Ответил ветеринар</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Пост с прикрепленным питомцем и ответом ветеринара -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-author-info">
+                        <div class="author-avatar">А</div>
+                        <div>
+                            <div class="author-name">Анна Смирнова</div>
+                            <div class="post-time">Сегодня, 14:20</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pet-badge">
+                    <span class="pet-badge-icon">🐶</span>
+                    Прикреплен питомец: Рекс (Собака, Корги, 1 год)
+                </div>
+
+                <h2 class="post-title">Частый кашель после прогулки</h2>
+                <div class="post-content">
+                    Добрый день! Заметила, что последнюю неделю Рекс начинает кашлять после активной игры на улице.
+                    Кашель сухой. Аллергий ранее не замечали. Питание не меняли. Стоит ли бить тревогу или это может
+                    быть из-за холодного воздуха?
+                </div>
+
+                <div class="comments-section">
+                    <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--text-color);">Ответы (1)</h3>
+
+                    <!-- Комментарий ветеринара -->
+                    <div class="comment">
+                        <div class="author-avatar" style="background-color: #E8F5E9; color: #2E7D32;">В</div>
+                        <div class="comment-content-wrapper">
+                            <div class="comment-header">
+                                <span class="author-name">Доктор Елизавета</span>
+                                <span class="vet-badge">✓ Проверенный врач</span>
+                                <span class="post-time" style="margin-left: auto;">15:05</span>
+                            </div>
+                            <div class="comment-text">
+                                Здравствуйте, Анна! Симптомы могут указывать на питомниковый кашель (инфекционный
+                                трахеобронхит) или реакцию на реагенты/холод. Учитывая возраст Рекса, я бы рекомендовала
+                                записаться на очный осмотр, чтобы послушать легкие и исключить инфекцию. До осмотра
+                                ограничьте активные физические нагрузки на холоде.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Обычный пост -->
+            <div class="post-card">
+                <div class="post-header">
+                    <div class="post-author-info">
+                        <div class="author-avatar" style="background-color: #E3F2FD; color: #1976D2;">И</div>
+                        <div>
+                            <div class="author-name">Иван Петров</div>
+                            <div class="post-time">Вчера, 19:45</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pet-badge">
+                    <span class="pet-badge-icon">🐱</span>
+                    Прикреплен питомец: Мурзик (Кот, Сфинкс, 4 года)
+                </div>
+
+                <h2 class="post-title">Какой увлажнитель воздуха выбрать для сфинкса?</h2>
+                <div class="post-content">
+                    Всем привет. Зимой воздух в квартире очень сухой, замечаю, что кожа у кота стала шелушиться.
+                    Посоветуйте хорошие увлажнители, которые тихо работают и безопасны для питомцев. Спасибо!
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+</html>

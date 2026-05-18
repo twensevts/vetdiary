@@ -1,0 +1,225 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Ветдневника",
+        "description": "Документация REST API для курсовой работы",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:5000"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Регистрация нового пользователя",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "Иван Владелец"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "ivan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "owner"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Пользователь успешно зарегистрирован"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Авторизация"
+                ],
+                "summary": "Вход в систему",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "ivan@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешный вход, возвращает токен"
+                    }
+                }
+            }
+        },
+        "/api/pets": {
+            "get": {
+                "tags": [
+                    "Питомцы"
+                ],
+                "summary": "Получить список своих питомцев",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список питомцев"
+                    },
+                    "401": {
+                        "description": "Не авторизован"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Питомцы"
+                ],
+                "summary": "Добавить нового питомца",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Бобик"
+                                    },
+                                    "species": {
+                                        "type": "string",
+                                        "example": "Собака"
+                                    },
+                                    "breed": {
+                                        "type": "string",
+                                        "example": "Дворняга"
+                                    },
+                                    "weight": {
+                                        "type": "number",
+                                        "example": 15.5
+                                    },
+                                    "birth_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2020-05-10"
+                                    },
+                                    "health_notes": {
+                                        "type": "string",
+                                        "example": "Здоров, очень активный"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Питомец добавлен"
+                    }
+                }
+            }
+        },
+        "/api/posts": {
+            "get": {
+                "tags": [
+                    "Форум"
+                ],
+                "summary": "Получить все посты форума",
+                "responses": {
+                    "200": {
+                        "description": "Лента постов"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Форум"
+                ],
+                "summary": "Создать пост (с привязкой питомца)",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Собака чешет ухо"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Подскажите, Бобик постоянно чешет правое ухо. Что это может быть?"
+                                    },
+                                    "pet_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Пост создан"
+                    }
+                }
+            }
+        }
+    }
+}

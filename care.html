@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐾 Ветдневник — Уход</title>
+    <style>
+        :root { --primary-color: #20B2AA; --bg-color: #f3f4f6; --text-color: #1f2937; --text-muted: #6b7280; --card-bg: #ffffff; --border-color: #e5e7eb; }
+        *{box-sizing:border-box;margin:0;padding:0;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+        body{background:var(--bg-color);color:var(--text-color)}
+        .navbar{display:flex;justify-content:space-between;align-items:center;background:var(--card-bg);padding:0 30px;height:70px;border-bottom:1px solid var(--border-color)}
+        .nav-left{display:flex;align-items:center;gap:40px}
+        .logo{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px}
+        .nav-menu{display:flex;gap:15px}
+        .nav-item{padding:8px 16px;border-radius:6px;text-decoration:none;color:var(--text-muted);font-weight:600;font-size:14px}
+        .nav-item.active{background:#e6f7f6;color:var(--primary-color)}
+        .container{max-width:1000px;margin:0 auto;padding:40px 30px}
+        .card{background:var(--card-bg);border-radius:12px;padding:20px;border:1px solid var(--border-color);margin-bottom:20px}
+        .card h2{font-size:18px;margin-bottom:12px}
+        .feeding-row{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:8px;border:1px solid #EEF2F2;background:#FBFFFE;margin-bottom:10px}
+        .muted{color:var(--text-muted);font-size:13px}
+        .btn{background:var(--primary-color);color:white;padding:8px 14px;border-radius:8px;border:none;cursor:pointer}
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo">🐾 Ветдневник</div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">⊞ Главная</a>
+                <a href="pet-detail.html" class="nav-item">🐶 Мои питомцы</a>
+                <a href="care.html" class="nav-item active">🏥 Уход</a>
+                <a href="forum.html" class="nav-item">💬 Форум</a>
+            </nav>
+        </div>
+        <div class="nav-right">
+            <div class="user-profile">
+                <div class="user-avatar" style="width:36px;height:36px;border-radius:50%;background:var(--primary-color);color:#fff;display:flex;align-items:center;justify-content:center;">К</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <h2>График кормлений</h2>
+                <button class="btn">+ Добавить кормление</button>
+            </div>
+
+            <div class="feeding-row">
+                <div>
+                    <div style="font-weight:600">Рекс — Утреннее кормление</div>
+                    <div class="muted">Корм: гипоаллергенный • 08:00</div>
+                </div>
+                <div class="muted">Повтор: ежедневно</div>
+            </div>
+
+            <div class="feeding-row">
+                <div>
+                    <div style="font-weight:600">Мурка — Вечернее кормление</div>
+                    <div class="muted">Корм: взрослая смесь • 19:00</div>
+                </div>
+                <div class="muted">Повтор: ежедневно</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <h2>Вакцинации</h2>
+                <button class="btn">+ Добавить вакцинацию</button>
+            </div>
+
+            <div style="padding:12px;border-radius:8px;border:1px solid #EEF2F2;margin-bottom:12px;background:#FFF">
+                <div style="font-weight:600">Рекс — 15.09.2025</div>
+                <div class="muted">Nobivac DHPPI + бешенство • Выполнено</div>
+            </div>
+
+            <div style="padding:12px;border-radius:8px;border:1px solid #EEF2F2;background:#FFF">
+                <div style="font-weight:600">Мурка — 10.12.2025</div>
+                <div class="muted">Комплексная вакцина • Запланировано</div>
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐾 Ветдневник</title>
+    <style>
+        :root {
+            --primary-color: #20B2AA; /* Синий цвет как на картинке */
+            --bg-color: #f3f4f6;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --card-bg: #ffffff;
+            --border-color: #f3f4f6;
+            --border-dark: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Верхняя навигационная панель */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            padding: 0 30px;
+            height: 70px;
+            border-bottom: 1px solid var(--border-dark);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-item.active {
+            background-color: #e6f7f6;
+            color: var(--primary-color);
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: #f9fafb;
+            color: var(--text-color);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .user-info .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 2px;
+        }
+
+        .user-info .user-role {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Основной контент */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-dark);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .icon-blue { color: var(--primary-color); }
+        .icon-orange { color: #f97316; }
+        .icon-green { color: #10b981; }
+
+        /* Верхний ряд - Статистика */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .stat-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-color);
+        }
+
+        .stat-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            background-color: #f9fafb;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* Средний ряд - Виджеты */
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* График кормлений */
+        .feeding-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feeding-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .bg-green-light { background-color: #f0fdf4; }
+        .bg-orange-light { background-color: #fff7ed; }
+
+        .feeding-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 6px;
+        }
+
+        .dot-green { background-color: #10b981; }
+        .dot-orange { background-color: #f97316; }
+
+        .feeding-text h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: var(--text-color);
+        }
+
+        .feeding-text p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .feeding-time {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        /* Вакцинации - пустое состояние */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: #9ca3af;
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        /* Нижний ряд - Питомцы */
+        .pets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .pet-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border: 1px solid var(--border-dark);
+            border-radius: 12px;
+        }
+
+        .pet-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .pet-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 2px;
+        }
+
+        .pet-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Верхняя навигация вместо сайдбара -->
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo" style="font-size: 18px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 8px;">🐾 Ветдневник</div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <span style="font-size: 16px;">⊞</span> Главная
+                </a>
+                <a href="pet-detail.html" class="nav-item">
+                    <span style="font-size: 16px;">🐶</span> Мои питомцы
+                </a>
+                <a href="forum.html" class="nav-item">
+                    <span style="font-size: 16px;">💬</span> Форум
+                </a>
+            
+                <a href="care.html" class="nav-item active">
+                    <span style="font-size: 16px;">🏥</span> Уход
+                </a>
+            </nav>
+        </div>
+        
+        <div class="nav-right">
+            <div class="user-profile">
+                <div class="user-avatar">К</div>
+                <div class="user-info">
+                    <div class="user-name">Катя</div>
+                    <div class="user-role">Владелец</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container">
+        
+        <!-- Статистика -->
+        <div class="stats-grid">
+            <div class="card stat-card" style="margin-bottom: 0;">
+                <div class="stat-info">
+                    <h3>Мои питомцы</h3>
+                    <div class="stat-value">2</div>
+                    <div class="stat-desc">Зарегистрировано</div>
+                </div>
+                <div class="stat-icon" style="color: #6b7280; background-color: #f3f4f6;">
+                    🐾
+                </div>
+            </div>
+
+            <div class="card stat-card" style="margin-bottom: 0;">
+                <div class="stat-info">
+                    <h3>Кормления</h3>
+                    <div class="stat-value">1</div>
+                    <div class="stat-desc">Сегодня осталось</div>
+                </div>
+                <div class="stat-icon icon-orange" style="background-color: #fff7ed;">
+                    🕒
+                </div>
+            </div>
+
+            <div class="card stat-card" style="margin-bottom: 0;">
+                <div class="stat-info">
+                    <h3>Вакцинации</h3>
+                    <div class="stat-value">0</div>
+                    <div class="stat-desc">Предстоит в этом месяце</div>
+                </div>
+                <div class="stat-icon icon-green" style="background-color: #ecfdf5;">
+                    💉
+                </div>
+            </div>
+        </div>
+
+        <!-- Виджеты -->
+        <div class="widgets-grid">
+            <!-- График кормлений -->
+            <div class="card" style="margin-bottom: 0;">
+                <div class="card-header icon-blue">
+                    📅 <span style="color: var(--text-color);">График кормлений</span>
+                </div>
+                
+                <div class="feeding-list">
+                    <div class="feeding-item bg-green-light">
+                        <div class="feeding-info">
+                            <div class="dot dot-green"></div>
+                            <div class="feeding-text">
+                                <h4>Рекс</h4>
+                                <p>Утреннее кормление</p>
+                            </div>
+                        </div>
+                        <div class="feeding-time">08:00</div>
+                    </div>
+
+                    <div class="feeding-item bg-orange-light">
+                        <div class="feeding-info">
+                            <div class="dot dot-orange"></div>
+                            <div class="feeding-text">
+                                <h4>Рекс</h4>
+                                <p>Вечернее кормление</p>
+                            </div>
+                        </div>
+                        <div class="feeding-time">18:00</div>
+                    </div>
+
+                    <div class="feeding-item bg-green-light">
+                        <div class="feeding-info">
+                            <div class="dot dot-green"></div>
+                            <div class="feeding-text">
+                                <h4>Мурка</h4>
+                                <p>Утреннее кормление</p>
+                            </div>
+                        </div>
+                        <div class="feeding-time">09:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вакцинации -->
+            <div class="card" style="margin-bottom: 0;">
+                <div class="card-header icon-green">
+                    💉 <span style="color: var(--text-color);">Вакцинации</span>
+                </div>
+                <div class="empty-state">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                    <p>Предстоящих вакцинаций нет</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Мои питомцы (Нижний блок) -->
+        <div class="card">
+            <div class="card-header" style="margin-bottom: 20px;">
+                Мои питомцы
+            </div>
+            <div class="pets-grid">
+                <div class="pet-item">
+                    <div class="pet-avatar">🐕</div>
+                    <div class="pet-info">
+                        <h4>Рекс</h4>
+                        <p>Немецкая овчарка</p>
+                        <p style="color: var(--text-color); margin-top: 4px;">32 кг</p>
+                    </div>
+                </div>
+
+                <div class="pet-item">
+                    <div class="pet-avatar">😸</div>
+                    <div class="pet-info">
+                        <h4>Мурка</h4>
+                        <p>Британская короткошерстная</p>
+                        <p style="color: var(--text-color); margin-top: 4px;">4.5 кг</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐾 Ветдневник</title>
+    <style>
+        :root {
+            --primary-color: #20B2AA;
+            --bg-color: #f3f4f6;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            padding: 0 30px;
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-item.active {
+            background-color: #e6f7f6;
+            color: var(--primary-color);
+        }
+
+        .nav-item:hover:not(.active) {
+            background-color: #f9fafb;
+            color: var(--text-color);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .user-info .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 2px;
+        }
+
+        .user-info .user-role {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Content */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .pets-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .pets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pet-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .pet-card-header {
+            background-color: var(--primary-color);
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .pet-card-body {
+            padding: 24px;
+        }
+
+        .pet-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .pet-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .pet-actions {
+            display: flex;
+            gap: 16px;
+            font-size: 18px;
+        }
+
+        .action-edit {
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .action-delete {
+            color: #ef4444;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .pet-breed {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .pet-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .pet-stat-label {
+            color: var(--text-muted);
+        }
+
+        .pet-stat-value {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 20px 0;
+        }
+
+        .pet-notes {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .pet-notes span {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-right: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo"
+                style="font-size: 18px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 8px;">
+                🐾 Ветдневник</div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item">
+                    <span style="font-size: 16px;">⊞</span> Главная
+                </a>
+                <a href="pet-detail.html" class="nav-item active">
+                    <span style="font-size: 16px;">🐶</span> Мои питомцы
+                </a>
+                <a href="forum.html" class="nav-item">
+                    <span style="font-size: 16px;">💬</span> Форум
+                </a>
+            </nav>
+        </div>
+        <div class="nav-right">
+            <div class="user-profile">
+                <div class="user-avatar">К</div>
+                <div class="user-info">
+                    <div class="user-name">Катя</div>
+                    <div class="user-role">Владелец</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <main class="container" style="position:relative;">
+
+        <!-- Окно со списком питомцев -->
+        <div id="pets-list-view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h1 class="page-title" style="margin-bottom: 0;">Управление питомцами</h1>
+                <button
+                    style="background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 15px; box-shadow: 0 2px 4px rgba(32, 178, 170, 0.3);">+
+                    Добавить питомца</button>
+            </div>
+            <div class="pets-grid">
+                <!-- Собака -->
+                <div class="pet-card" onclick="showPetDetail('rex')"
+                    style="cursor: pointer; transition: transform 0.2s;"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div class="pet-card-header">🐕</div>
+                    <div class="pet-card-body">
+                        <div class="pet-header-row">
+                            <div class="pet-name">Рекс</div>
+                            <div class="pet-actions">
+                                <span class="action-edit" onclick="event.stopPropagation()">✎</span>
+                                <span class="action-delete" onclick="event.stopPropagation()">🗑</span>
+                            </div>
+                        </div>
+                        <div class="pet-breed">Немецкая овчарка</div>
+
+                        <div class="pet-stat"><span class="pet-stat-label">Возраст:</span><span class="pet-stat-value">5
+                                лет</span></div>
+                        <div class="pet-stat"><span class="pet-stat-label">Вес:</span><span class="pet-stat-value">32
+                                кг</span></div>
+                        <div class="pet-stat"><span class="pet-stat-label">Размер:</span><span
+                                class="pet-stat-value">Крупный</span></div>
+
+                        <div class="divider"></div>
+                        <div class="pet-notes"><span>Заметки:</span> Чувствительное пищеварение</div>
+                    </div>
+                </div>
+
+                <!-- Кошка -->
+                <div class="pet-card" onclick="showPetDetail('murka')"
+                    style="cursor: pointer; transition: transform 0.2s;"
+                    onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                    <div class="pet-card-header">😸</div>
+                    <div class="pet-card-body">
+                        <div class="pet-header-row">
+                            <div class="pet-name">Мурка</div>
+                            <div class="pet-actions">
+                                <span class="action-edit" onclick="event.stopPropagation()">✎</span>
+                                <span class="action-delete" onclick="event.stopPropagation()">🗑</span>
+                            </div>
+                        </div>
+                        <div class="pet-breed">Британская короткошерстная</div>
+
+                        <div class="pet-stat"><span class="pet-stat-label">Возраст:</span><span class="pet-stat-value">5
+                                лет</span></div>
+                        <div class="pet-stat"><span class="pet-stat-label">Вес:</span><span class="pet-stat-value">4.5
+                                кг</span></div>
+                        <div class="pet-stat"><span class="pet-stat-label">Размер:</span><span
+                                class="pet-stat-value">Средний</span></div>
+
+                        <div class="divider"></div>
+                        <div class="pet-notes"><span>Заметки:</span> Здорова</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Окно с детальной карточкой питомца -->
+        <div id="pet-detail-view" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <button onclick="hidePetDetail()"
+                    style="background: none; border: none; font-size: 16px; color: var(--primary-color); cursor: pointer; font-weight: 600;">←
+                    Вернуться к списку</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
+                <!-- Левая колонка - Профиль и Документы -->
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div class="pet-card">
+                        <div class="pet-card-header" style="height: 120px; font-size: 60px;">🐕</div>
+                        <div class="pet-card-body">
+                            <h2 style="font-size: 24px; margin-bottom: 5px;">Рекс</h2>
+                            <p style="color: var(--text-muted); margin-bottom: 20px;">Собака, Немецкая овчарка</p>
+
+                            <div
+                                style="background-color: #FFF3E0; border-left: 4px solid #FF9800; padding: 12px; border-radius: 4px; margin-bottom: 20px; font-size: 14px;">
+                                <div style="color: #E65100; font-weight: 600; margin-bottom: 4px;">⚠ Особенности
+                                    здоровья</div>
+                                Чувствительное пищеварение. Аллергия на курицу.
+                            </div>
+
+                            <div class="pet-stat"><span class="pet-stat-label">Дата рождения:</span><span
+                                    class="pet-stat-value">15.03.2021</span></div>
+                            <div class="pet-stat"><span class="pet-stat-label">Пол:</span><span
+                                    class="pet-stat-value">Кобель</span></div>
+                            <div class="pet-stat"><span class="pet-stat-label">Чип:</span><span
+                                    class="pet-stat-value">643801000012345</span></div>
+                        </div>
+                    </div>
+
+                    <div class="pet-card">
+                        <div class="pet-card-body">
+                            <h3
+                                style="font-size: 16px; margin-bottom: 15px; display: flex; justify-content: space-between;">
+                                Документы <span style="color: var(--primary-color); cursor: pointer;">+ Добавить</span>
+                            </h3>
+
+                            <div
+                                style="display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid #E5E7EB; border-radius: 8px; margin-bottom: 10px;">
+                                <span style="font-size: 24px; color: #EF4444;">📄</span>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 14px; font-weight: 600;">Вет. Паспорт</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">PDF • 2.4 MB</div>
+                                </div>
+                                <span style="color: var(--text-muted); cursor: pointer;">⋮</span>
+                            </div>
+
+                            <div
+                                style="display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid #E5E7EB; border-radius: 8px;">
+                                <span style="font-size: 24px; color: #3B82F6;">🖼</span>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 14px; font-weight: 600;">Рентген лапы</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">JPG • 1.1 MB</div>
+                                </div>
+                                <span style="color: var(--text-muted); cursor: pointer;">⋮</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Правая колонка - История процедур -->
+                <div class="pet-card">
+                    <div class="pet-card-body">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #E5E7EB; padding-bottom: 15px;">
+                            <h2 style="font-size: 18px;">Дневник ухода и процедур</h2>
+                            <button
+                                style="background-color: var(--primary-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;">+
+                                Добавить запись</button>
+                        </div>
+
+                        <!-- Таймлайн (позаимствовано из первого варианта) -->
+                        <div
+                            style="position: relative; padding-left: 24px; border-left: 2px solid #E5E7EB; margin-left: 10px;">
+                            <!-- Запись 1 -->
+                            <div style="position: relative; margin-bottom: 30px;">
+                                <div
+                                    style="position: absolute; left: -32px; top: 0; width: 14px; height: 14px; border-radius: 50%; background-color: var(--primary-color); border: 2px solid white; box-shadow: 0 0 0 2px rgba(32, 178, 170, 0.3);">
+                                </div>
+                                <div
+                                    style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600;">
+                                    10 Октября 2025, 15:30</div>
+                                <div
+                                    style="background-color: #F9FAFB; padding: 15px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                                    <div
+                                        style="font-weight: bold; font-size: 15px; margin-bottom: 5px; display: flex; justify-content: space-between;">
+                                        Плановый осмотр <span
+                                            style="font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #E3F2FD; color: #1565C0;">Визит
+                                            к врачу</span></div>
+                                    <div style="font-size: 14px; line-height: 1.5; color: #555;">Осмотр в клинике "Белый
+                                        клык". Жалоб нет. Рекомендовано продолжить текущий корм (гипоаллергенный).</div>
+                                </div>
+                            </div>
+
+                            <!-- Запись 2 -->
+                            <div style="position: relative; margin-bottom: 30px;">
+                                <div
+                                    style="position: absolute; left: -32px; top: 0; width: 14px; height: 14px; border-radius: 50%; background-color: #10B981; border: 2px solid white; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);">
+                                </div>
+                                <div
+                                    style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600;">
+                                    15 Сентября 2025, 10:00</div>
+                                <div
+                                    style="background-color: #F9FAFB; padding: 15px; border-radius: 8px; border: 1px solid #E5E7EB;">
+                                    <div
+                                        style="font-weight: bold; font-size: 15px; margin-bottom: 5px; display: flex; justify-content: space-between;">
+                                        Ежегодная вакцинация <span
+                                            style="font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #ECFDF5; color: #059669;">Вакцинация</span>
+                                    </div>
+                                    <div style="font-size: 14px; line-height: 1.5; color: #555;">Вакцина комплексная
+                                        (Nobivac DHPPI) + Бешенство. Перенес хорошо. Прикреплен документ (Вет. Паспорт
+                                        изменен).</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function showPetDetail(petId) {
+            document.getElementById('pets-list-view').style.display = 'none';
+            document.getElementById('pet-detail-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+        function hidePetDetail() {
+            document.getElementById('pet-detail-view').style.display = 'none';
+            document.getElementById('pets-list-view').style.display = 'block';
+        }
+    </script>
+
+</body>
+
+</html>
