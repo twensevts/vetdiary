@@ -158,9 +158,25 @@ body {
 }
 
 .pets-grid {
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  min-width: 900px;
+}
+
+@media (max-width: 1000px) {
+  .pets-grid {
+    grid-template-columns: repeat(2, 1fr);
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 700px) {
+  .pets-grid {
+    grid-template-columns: 1fr;
+    min-width: 300px;
+  }
 }
 
 .pet-card {
@@ -170,6 +186,7 @@ body {
   color: inherit;
   display: block;
   border: 1px solid rgba(15, 23, 42, 0.04);
+  min-width: 0;
 }
 
 .pet-image-placeholder {
@@ -433,10 +450,6 @@ body {
 }
 
 @media (max-width:640px) {
-  .pets-grid {
-    grid-template-columns: 1fr;
-  }
-
   .modal-content {
     max-width: 95%;
     padding: 16px;

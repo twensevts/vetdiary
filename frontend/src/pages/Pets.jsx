@@ -82,7 +82,7 @@ export default function Pets() {
                 onPetAdded={fetchPets}
             />
 
-            <PetDetailModal pet={selectedPet} onClose={() => { setSelectedPet(null); navigate('/pets'); }} />
+            <PetDetailModal pet={selectedPet} onClose={() => { setSelectedPet(null); navigate('/pets'); }} onPetDeleted={fetchPets} />
         </div>
     );
 }

@@ -65,7 +65,7 @@ const editLabelStyle = {
     marginBottom: '6px',
 };
 
-export default function PetDetailModal({ pet, onClose }) {
+export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
     const normalizePet = (p) => {
         if (!p) return null;
         return {
@@ -251,6 +251,20 @@ export default function PetDetailModal({ pet, onClose }) {
         } catch (e) {
             console.error('Ошибка удаления', e);
             alert('Не удалось удалить документ');
+        }
+    };
+
+    const handleDeletePet = async () => {
+        if (!confirm('Точно удалить питомца? Это действие нельзя отменить.')) return;
+        try {
+            await axios.delete(`http://localhost:5000/api/pets/${pet.id}`, {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (onPetDeleted) onPetDeleted();
+            onClose();
+        } catch (e) {
+            console.error('Ошибка удаления питомца', e);
+            alert('Не удалось удалить питомца');
         }
     };
 
@@ -444,8 +458,11 @@ export default function PetDetailModal({ pet, onClose }) {
                         </div>
                     )}
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '18px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '18px' }}>
                         <button type="button" className="btn btn-outline" onClick={onClose}>Закрыть</button>
+                        {isOwner && (
+                            <button type="button" className="btn" style={{ background: '#FEE2E2', color: '#991B1B' }} onClick={handleDeletePet}>Удалить питомца</button>
+                        )}
                     </div>
                 </div>
             </div>
