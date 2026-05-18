@@ -50,6 +50,7 @@ body {
 }
 
 .container {
+  width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 20px;
@@ -130,6 +131,34 @@ body {
 .header-muted {
   color: var(--muted-700);
   font-size: 13px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 18px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.item-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0;
 }
 
 .form-group {

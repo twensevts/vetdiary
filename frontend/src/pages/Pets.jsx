@@ -49,7 +49,7 @@ export default function Pets() {
         <div className="page-container">
             <div className="card">
                 <div className="card-header">
-                    <span>Питомцы</span>
+                    <h2 className="page-title" style={{ marginBottom: 0 }}>Питомцы</h2>
                     <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>+ Добавить питомца</button>
                 </div>
 

@@ -151,7 +151,7 @@ export default function Dashboard() {
         return (
             <div className="page-container">
                 <div className="card">
-                    <h2 style={{ marginBottom: '12px' }}>Главная доступна после входа</h2>
+                    <h2 className="page-title">Главная доступна после входа</h2>
                     <p className="muted">Авторизуйтесь, чтобы увидеть питомцев, кормления и вакцинации.</p>
                 </div>
             </div>
@@ -169,7 +169,7 @@ export default function Dashboard() {
             <div className="stats-grid">
                 <div className="card stat-card">
                     <div className="stat-info">
-                        <h3>Всего питомцев</h3>
+                        <h3 className="section-title">Всего питомцев</h3>
                         <div className="stat-value">{pets.length}</div>
                         <p className="stat-desc">Под вашим наблюдением</p>
                     </div>
@@ -178,7 +178,7 @@ export default function Dashboard() {
 
                 <div className="card stat-card">
                     <div className="stat-info">
-                        <h3>Кормления сегодня</h3>
+                        <h3 className="section-title">Кормления сегодня</h3>
                         <div className="stat-value">{feedingToday}</div>
                         <p className="stat-desc">Записей на текущую дату</p>
                     </div>
@@ -187,7 +187,7 @@ export default function Dashboard() {
 
                 <div className="card stat-card">
                     <div className="stat-info">
-                        <h3>Вакцинации на месяц</h3>
+                        <h3 className="section-title">Вакцинации на месяц</h3>
                         <div className="stat-value">{upcomingVaccinations}</div>
                         <p className="stat-desc">План на ближайшие 30 дней</p>
                     </div>
@@ -199,7 +199,7 @@ export default function Dashboard() {
     {upcomingReminders.length > 0 && (
         <div className="card" style={{ background: '#FEF3C7', border: '1px solid #F59E0B' }}>
             <div className="card-header" style={{ color: '#92400E', marginBottom: '8px' }}>
-                Важное уведомление
+                <h3 className="card-title" style={{ color: '#92400E' }}>Важное уведомление</h3>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {upcomingReminders.map((event) => (
@@ -222,7 +222,7 @@ export default function Dashboard() {
             <div className="widgets-grid">
                 <div className="card">
                     <div className="card-header" style={{ marginBottom: '12px' }}>
-                        Последние кормления
+                        <h3 className="card-title">Последние кормления</h3>
                     </div>
 
                     {recentFeedings.length === 0 && <p className="muted">Пока нет записей кормления.</p>}
@@ -233,7 +233,7 @@ export default function Dashboard() {
                                 <div className="feeding-info">
                                     <div className="dot dot-green" />
                                     <div className="feeding-text">
-                                        <h4>{event.pet_name}</h4>
+                                            <h4 className="item-title">{event.pet_name}</h4>
                                         <p>{event.description || eventLabelMap[event.event_type]}</p>
                                     </div>
                                 </div>
@@ -247,7 +247,7 @@ export default function Dashboard() {
 
                 <div className="card">
                     <div className="card-header" style={{ marginBottom: '12px' }}>
-                        Ближайшие вакцинации
+                        <h3 className="card-title">Ближайшие вакцинации</h3>
                     </div>
 
                     {recentVaccinations.length === 0 && <p className="muted">Пока нет запланированных вакцинаций.</p>}
@@ -262,7 +262,7 @@ export default function Dashboard() {
                             >
                                 <div className="pet-avatar">💉</div>
                                 <div>
-                                    <h4>{event.pet_name}</h4>
+                                    <h4 className="item-title">{event.pet_name}</h4>
                                     <p className="muted">{event.description || 'Вакцинация'}</p>
                                 </div>
                                 <div className="muted">
@@ -276,7 +276,7 @@ export default function Dashboard() {
 
             <div className="card" style={{ marginTop: '20px' }}>
                 <div className="card-header" style={{ marginBottom: '12px' }}>
-                    Мои питомцы
+                    <h3 className="card-title">Мои питомцы</h3>
                 </div>
 
                 {recentPets.length === 0 && (
@@ -288,7 +288,7 @@ export default function Dashboard() {
                         <div key={pet.id} className="pet-item" style={{ cursor: 'pointer' }} onClick={() => setSelectedPet(pet)}>
                             <div className="pet-avatar">{getEmoji(pet.species)}</div>
                             <div>
-                                <h4>{pet.name}</h4>
+                                <h4 className="item-title">{pet.name}</h4>
                                 <p className="muted">{pet.species}{pet.breed ? `, ${pet.breed}` : ''}</p>
                             </div>
                         </div>

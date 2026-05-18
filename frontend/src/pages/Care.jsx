@@ -116,10 +116,10 @@ export default function Care() {
         <div className="page-container">
             <div className="card">
                 <div className="card-header" style={{ marginBottom: '12px' }}>
-                    <span>Уход за питомцами</span>
+                    <h2 className="page-title" style={{ marginBottom: 0 }}>Уход за питомцами</h2>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
                     <div className="form-group" style={{ marginBottom: 0 }}>
                         <label>Питомец</label>
                         <select
@@ -135,15 +135,11 @@ export default function Care() {
                             ))}
                         </select>
                     </div>
-
-                    <div className="muted" style={{ alignSelf: 'end', paddingBottom: '8px' }}>
-                        {selectedPet ? `Выбран: ${selectedPet.name}` : 'Выберите питомца'}
-                    </div>
                 </div>
             </div>
 
             <div className="card">
-                <h3 style={{ marginBottom: '16px' }}>Добавить событие ухода</h3>
+                <h3 className="section-title" style={{ marginBottom: '16px' }}>Добавить событие ухода</h3>
 
                 {error && (
                     <div style={{ background: '#FEE2E2', color: '#991B1B', padding: '10px', borderRadius: '6px', marginBottom: '15px', fontSize: '14px' }}>
@@ -192,12 +188,12 @@ export default function Care() {
 
             <div className="care-grid">
                 <div className="card">
-                    <h2 style={{ marginBottom: '12px' }}>График кормлений</h2>
+                    <h2 className="card-title" style={{ marginBottom: '12px' }}>График кормлений</h2>
                     {feedingEvents.length === 0 && <p className="muted">Пока нет событий кормления.</p>}
                     {feedingEvents.map((event) => (
                         <div key={event.id} className={`care-row ${eventColors[event.event_type] || ''}`}>
                             <div>
-                                <div style={{ fontWeight: 600 }}>{selectedPet?.name || 'Питомец'} — {eventLabelMap[event.event_type] || event.event_type}</div>
+                                <div className="item-title">{selectedPet?.name || 'Питомец'} — {eventLabelMap[event.event_type] || event.event_type}</div>
                                 <div className="muted">{event.description}</div>
                             </div>
                             <div className="muted">{formatDate(event.event_date)}</div>
@@ -206,12 +202,12 @@ export default function Care() {
                 </div>
 
                 <div className="card">
-                    <h2 style={{ marginBottom: '12px' }}>Вакцинации</h2>
+                    <h2 className="card-title" style={{ marginBottom: '12px' }}>Вакцинации</h2>
                     {vaccinationEvents.length === 0 && <p className="muted">Пока нет событий вакцинации.</p>}
                     {vaccinationEvents.map((event) => (
                         <div key={event.id} className={`care-row ${eventColors[event.event_type] || ''}`}>
                             <div>
-                                <div style={{ fontWeight: 600 }}>{selectedPet?.name || 'Питомец'} — {eventLabelMap[event.event_type] || event.event_type}</div>
+                                <div className="item-title">{selectedPet?.name || 'Питомец'} — {eventLabelMap[event.event_type] || event.event_type}</div>
                                 <div className="muted">{event.description}</div>
                             </div>
                             <div className="muted">{formatDate(event.event_date)}</div>
@@ -222,7 +218,7 @@ export default function Care() {
 
             {/* Простой календарь на 14 дней */}
             <div className="card" style={{ marginTop: '20px' }}>
-                <h3 style={{ marginBottom: '16px' }}>Календарь на 14 дней</h3>
+                <h3 className="section-title" style={{ marginBottom: '16px' }}>Календарь на 14 дней</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))', gap: '8px' }}>
                     {Array.from({ length: 14 }).map((_, i) => {
                         const date = new Date();

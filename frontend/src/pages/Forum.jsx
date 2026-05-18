@@ -27,6 +27,7 @@ export default function Forum() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [createError, setCreateError] = useState('');
     const [selectedPetFromPost, setSelectedPetFromPost] = useState(null);
+    const [openCommentsPostId, setOpenCommentsPostId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchInput, setSearchInput] = useState('');
     const [speciesFilter, setSpeciesFilter] = useState('');
@@ -338,8 +339,13 @@ export default function Forum() {
                         </div>
                     )}
 
-                    <h3 className="post-title">{post.title}</h3>
-                    <div className="post-content">{post.content}</div>
+                    <div
+                        onClick={() => setOpenCommentsPostId(prev => prev === post.id ? null : post.id)}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <h3 className="post-title">{post.title}</h3>
+                        <div className="post-content">{post.content}</div>
+                    </div>
 
                     {canDeletePost(post) && (
                         <button
@@ -351,6 +357,7 @@ export default function Forum() {
                         </button>
                     )}
 
+                    {openCommentsPostId === post.id && (
                     <div style={{ marginTop: '12px' }}>
                         <h4 style={{ marginBottom: '8px' }}>Комментарии</h4>
                         {(() => {
@@ -373,7 +380,7 @@ export default function Forum() {
 
                             const CommentItem = ({ c, depth = 0, onReplyClick = null }) => {
                                 const [showReply, setShowReply] = useState(false);
-                                const [expanded, setExpanded] = useState(depth === 0);
+                                const [expanded, setExpanded] = useState(true);
                                 const replyCount = c.children ? c.children.length : 0;
                                 const isNested = depth > 0;
                                 const canNestDeeper = depth < MAX_DEPTH;
@@ -427,6 +434,7 @@ export default function Forum() {
                             );
                         })()}
                     </div>
+                    )}
                 </div>
             ))}
             {filteredPosts.length === 0 && <p>{posts.length === 0 ? 'Форум пока пуст.' : 'По вашему запросу ничего не найдено.'}</p>}

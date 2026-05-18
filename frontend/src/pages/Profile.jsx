@@ -63,8 +63,8 @@ export default function Profile() {
 
     return (
         <div className="page-container">
-            <div className="card" style={{ maxWidth: '500px', margin: '0 auto' }}>
-                <h2 style={{ marginBottom: '20px' }}>Мой профиль</h2>
+            <div className="card" style={{ maxWidth: '980px', width: '100%', margin: '0 auto' }}>
+                <h2 style={{ marginBottom: '20px', fontSize: '28px', fontWeight: 700 }}>Мой профиль</h2>
 
                 {error && (
                     <div style={{ background: '#FEE2E2', color: '#991B1B', padding: '10px', borderRadius: '6px', marginBottom: '15px', fontSize: '14px' }}>
@@ -101,7 +101,7 @@ export default function Profile() {
                     </div>
 
                     <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '8px 0' }} />
-                    <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Оставьте поля пароля пустыми, если не хотите его менять</p>
+                    <p style={{ fontSize: '28px', color: 'var(--text-muted)', fontWeight: 700, lineHeight: 1.1, margin: '4px 0 0' }}>Смена пароля</p>
 
                     <div className="form-group" style={{ marginBottom: 0 }}>
                         <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: '500' }}>Текущий пароль</label>

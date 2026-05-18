@@ -8,6 +8,14 @@ const formatDate = (dateValue) => {
     return date.toLocaleDateString('ru-RU');
 };
 
+const pluralizeRu = (value, one, few, many) => {
+    const mod10 = value % 10;
+    const mod100 = value % 100;
+    if (mod10 === 1 && mod100 !== 11) return one;
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
+    return many;
+};
+
 const calculateAge = (dateValue) => {
     if (!dateValue) return 'Не указано';
     const birthDate = new Date(dateValue);
@@ -19,7 +27,19 @@ const calculateAge = (dateValue) => {
         years -= 1;
     }
     if (years < 0) return 'Не указано';
-    return `${years} ${years === 1 ? 'год' : years < 5 ? 'года' : 'лет'}`;
+    if (years === 0) {
+        let months = (today.getFullYear() - birthDate.getFullYear()) * 12 + (today.getMonth() - birthDate.getMonth());
+        if (today.getDate() < birthDate.getDate()) months -= 1;
+        months = Math.max(months, 0);
+        if (months === 0) {
+            const start = new Date(birthDate.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            const end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const days = Math.max(Math.floor((end - start) / 86400000), 0);
+            return `${days} ${pluralizeRu(days, 'день', 'дня', 'дней')}`;
+        }
+        return `${months} ${pluralizeRu(months, 'месяц', 'месяца', 'месяцев')}`;
+    }
+    return `${years} ${pluralizeRu(years, 'год', 'года', 'лет')}`;
 };
 
 const getPetEmoji = (species) => {
