@@ -15,8 +15,8 @@ export default function Pets() {
     const [pets, setPets] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [error, setError] = useState('');
-    const navigate = useNavigate();
     const params = useParams();
+    const navigate = useNavigate();
     const [selectedPet, setSelectedPet] = useState(null);
 
     const fetchPets = async () => {
@@ -57,8 +57,14 @@ export default function Pets() {
 
                 <div className="pets-grid">
                     {pets.map((pet) => (
-                        <div key={pet.id} className="pet-card" onClick={() => navigate(`/pets/${pet.id}`)}>
-                            <div className="pet-image-placeholder">{getEmoji(pet.species)}</div>
+                        <div key={pet.id} className="pet-card" onClick={() => { setSelectedPet(pet); }}>
+                            <div className="pet-image-placeholder">
+                                {pet.photo_url ? (
+                                    <img src={pet.photo_url} alt={pet.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                    getEmoji(pet.species)
+                                )}
+                            </div>
                             <div className="pet-info">
                                 <div className="pet-name">{pet.name}</div>
                                 <div className="pet-details">{pet.species}{pet.breed ? `, ${pet.breed}` : ''}</div>

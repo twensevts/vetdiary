@@ -7,15 +7,21 @@ import Dashboard from './pages/Dashboard';
 import Forum from './pages/Forum';
 import Care from './pages/Care';
 import Pets from './pages/Pets';
+import Profile from './pages/Profile';
+import Admin from './pages/Admin';
 
 function AppLayout() {
   const location = useLocation();
   const token = localStorage.getItem('token');
-  const showNavbar = Boolean(token) && location.pathname !== '/' && location.pathname !== '/register';
+  const hideNavbarPaths = ['/', '/register', '/forum'];
+  const showNavbar = Boolean(token) || (!token && !hideNavbarPaths.includes(location.pathname));
+
+  // Show navbar if logged in (except login/register pages), or show minimal navbar for forum without auth
+  const shouldShowNavbar = (Boolean(token) && location.pathname !== '/' && location.pathname !== '/register') || (!token && location.pathname === '/forum');
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {showNavbar && <Navbar />}
+      {shouldShowNavbar && <Navbar />}
       <main style={{ padding: '30px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
         <Routes>
           <Route path="/" element={<Login />} />
@@ -25,6 +31,8 @@ function AppLayout() {
           <Route path="/pets/:id" element={<Pets />} />
           <Route path="/forum" element={<Forum />} />
           <Route path="/care" element={<Care />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </main>
     </div>

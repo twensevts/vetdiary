@@ -219,6 +219,51 @@ export default function Care() {
                     ))}
                 </div>
             </div>
+
+            {/* Простой календарь на 14 дней */}
+            <div className="card" style={{ marginTop: '20px' }}>
+                <h3 style={{ marginBottom: '16px' }}>Календарь на 14 дней</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))', gap: '8px' }}>
+                    {Array.from({ length: 14 }).map((_, i) => {
+                        const date = new Date();
+                        date.setDate(date.getDate() + i);
+                        const dateKey = date.toISOString().slice(0, 10);
+                        const dayEvents = events.filter(e => getDateKey(e.event_date) === dateKey);
+                        
+                        return (
+                            <div key={i} style={{ 
+                                padding: '8px', 
+                                border: '1px solid var(--border-color)', 
+                                borderRadius: '8px',
+                                background: dayEvents.length > 0 ? '#E0F2F1' : '#f9fafb',
+                                textAlign: 'center',
+                                fontSize: '13px'
+                            }}>
+                                <div style={{ fontWeight: '600', color: 'var(--text-muted)' }}>
+                                    {date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}
+                                </div>
+                                {dayEvents.length > 0 ? (
+                                    <div style={{ marginTop: '4px', fontSize: '11px' }}>
+                                        {dayEvents.length} {dayEvents.length === 1 ? 'событие' : 'событий'}
+                                    </div>
+                                ) : (
+                                    <div style={{ marginTop: '4px', color: '#9CA3AF', fontSize: '11px' }}>—</div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
         </div>
     );
+}
+
+function getDateKey(dateValue) {
+    if (!dateValue) return '';
+    if (typeof dateValue === 'string' && /^\d{4}-\d{2}-\d{2}/.test(dateValue)) {
+        return dateValue.slice(0, 10);
+    }
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toISOString().slice(0, 10);
 }

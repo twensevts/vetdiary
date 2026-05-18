@@ -99,6 +99,64 @@ class PetController {
             res.status(500).json({ message: 'Ошибка при удалении питомца' });
         }
     }
+
+    async uploadPhoto(req, res) {
+        try {
+            const petId = req.params.id;
+            const userId = req.user.id;
+
+            const existing = await db.query('SELECT * FROM Pet WHERE id = $1', [petId]);
+            if (existing.rowCount === 0) return res.status(404).json({ message: 'Питомец не найден' });
+            const pet = existing.rows[0];
+
+            if (pet.owner_id !== userId && req.user.role !== 'admin') {
+                return res.status(403).json({ message: 'Доступ запрещен' });
+            }
+
+            if (!req.file) {
+                return res.status(400).json({ message: 'Файл фото обязателен' });
+            }
+
+            const mimeType = req.file.mimetype;
+            const base64 = req.file.buffer.toString('base64');
+            const photoUrl = `data:${mimeType};base64,${base64}`;
+
+            await db.query('UPDATE Pet SET photo_url = $1 WHERE id = $2', [photoUrl, petId]);
+
+            res.json({ message: 'Фото загружено', photo_url: photoUrl });
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ message: 'Ошибка при загрузке фото' });
+        }
+    }
+
+    async getPhoto(req, res) {
+        try {
+            const petId = req.params.id;
+            const result = await db.query('SELECT photo_url FROM Pet WHERE id = $1', [petId]);
+            if (result.rowCount === 0) return res.status(404).json({ message: 'Питомец не найден' });
+
+            const photoUrl = result.rows[0].photo_url;
+            if (!photoUrl) return res.status(404).json({ message: 'Фото не загружено' });
+
+            res.json({ photo_url: photoUrl });
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ message: 'Ошибка при получении фото' });
+        }
+    }
+
+    async getPet(req, res) {
+        try {
+            const petId = req.params.id;
+            const result = await db.query('SELECT * FROM Pet WHERE id = $1', [petId]);
+            if (result.rowCount === 0) return res.status(404).json({ message: 'Питомец не найден' });
+            res.json(result.rows[0]);
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ message: 'Ошибка при получении питомца' });
+        }
+    }
 }
 
 module.exports = new PetController();

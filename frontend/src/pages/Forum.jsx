@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import PetDetailModal from '../components/PetDetailModal';
 
 function CommentBox({ onSubmit }) {
     const [text, setText] = useState('');
@@ -25,8 +26,10 @@ export default function Forum() {
     const [isCreating, setIsCreating] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [createError, setCreateError] = useState('');
+    const [selectedPetFromPost, setSelectedPetFromPost] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchInput, setSearchInput] = useState('');
+    const [speciesFilter, setSpeciesFilter] = useState('');
     const [formData, setFormData] = useState({
         title: '',
         content: '',
@@ -57,8 +60,8 @@ export default function Forum() {
         try {
             const response = await axios.get('http://localhost:5000/api/posts');
             setPosts(response.data);
-            // preload comments for visible posts
-            response.data.forEach(p => fetchComments(p.id));
+            setCommentsMap({});
+            await Promise.allSettled(response.data.map((post) => fetchComments(post.id)));
         } catch (error) {
             console.error('Ошибка загрузки форума', error);
         }
@@ -78,10 +81,10 @@ export default function Forum() {
     const handleCreateComment = async (postId, content, resetCb) => {
         if (!token) return alert('Войдите, чтобы комментировать');
         try {
-            const resp = await axios.post(`http://localhost:5000/api/posts/${postId}/comments`, { content }, {
+            await axios.post(`http://localhost:5000/api/posts/${postId}/comments`, { content }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setCommentsMap(prev => ({ ...prev, [postId]: [...(prev[postId] || []), resp.data] }));
+            await fetchComments(postId);
             if (resetCb) resetCb();
         } catch (e) {
             console.error('Не удалось добавить комментарий', e);
@@ -160,6 +163,12 @@ export default function Forum() {
 
     const normalizedSearch = searchQuery.trim().toLowerCase();
     const filteredPosts = posts.filter((post) => {
+        // Фильтр по типу животного
+        if (speciesFilter) {
+            const petSpecies = (post.pet_species || '').toLowerCase();
+            if (!petSpecies.includes(speciesFilter.toLowerCase())) return false;
+        }
+
         if (!normalizedSearch) return true;
         const source = [
             post.title,
@@ -199,11 +208,22 @@ export default function Forum() {
                     <input
                         type="text"
                         className="form-control"
-                        style={{ minWidth: '280px' }}
+                        style={{ minWidth: '220px' }}
                         placeholder="Поиск по постам, авторам и питомцам"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                     />
+                    <select
+                        className="form-control"
+                        style={{ minWidth: '140px', width: 'auto' }}
+                        value={speciesFilter}
+                        onChange={(e) => setSpeciesFilter(e.target.value)}
+                    >
+                        <option value="">Все животные</option>
+                        <option value="собак">Собаки</option>
+                        <option value="кош">Кошки</option>
+                        <option value="друг">Другое</option>
+                    </select>
                     <button className="btn btn-outline" type="button" onClick={() => setSearchQuery(searchInput)}>
                         Поиск
                     </button>
@@ -289,7 +309,32 @@ export default function Forum() {
                     </div>
 
                     {post.pet_name && (
-                        <div className="pet-badge" style={{ marginBottom: '15px' }}>
+                        <div 
+                            className="pet-badge" 
+                            style={{ marginBottom: '15px', cursor: 'pointer' }}
+                            onClick={() => {
+                                const petData = {
+                                    id: post.pet_id,
+                                    name: post.pet_name,
+                                    pet_name: post.pet_name,
+                                    species: post.pet_species,
+                                    pet_species: post.pet_species,
+                                    breed: post.pet_breed,
+                                    pet_breed: post.pet_breed,
+                                    birth_date: post.pet_birth_date,
+                                    pet_birth_date: post.pet_birth_date,
+                                    weight: post.pet_weight,
+                                    pet_weight: post.pet_weight,
+                                    health_notes: post.pet_health_notes,
+                                    pet_health_notes: post.pet_health_notes,
+                                    photo_url: post.pet_photo_url,
+                                    pet_photo_url: post.pet_photo_url,
+                                    owner_id: post.pet_owner_id,
+                                    pet_owner_id: post.pet_owner_id
+                                };
+                                setSelectedPetFromPost(petData);
+                            }}
+                        >
                             🐾 Питомец: {post.pet_name} ({post.pet_species})
                         </div>
                     )}
@@ -326,6 +371,11 @@ export default function Forum() {
                 </div>
             ))}
             {filteredPosts.length === 0 && <p>{posts.length === 0 ? 'Форум пока пуст.' : 'По вашему запросу ничего не найдено.'}</p>}
+
+            <PetDetailModal 
+                pet={selectedPetFromPost} 
+                onClose={() => setSelectedPetFromPost(null)} 
+            />
         </div>
     );
 }

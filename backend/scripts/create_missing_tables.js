@@ -21,6 +21,14 @@ async function run() {
       created_at TIMESTAMP NOT NULL DEFAULT NOW()
     )`);
 
+    await db.query(`CREATE TABLE IF NOT EXISTS PostComment (
+      id SERIAL PRIMARY KEY,
+      post_id INTEGER NOT NULL REFERENCES Post(id) ON DELETE CASCADE,
+      author_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+      content TEXT NOT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    )`);
+
     console.log('Missing tables created (if any).');
     process.exit(0);
   } catch (e) {

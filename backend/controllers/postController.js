@@ -26,7 +26,10 @@ class PostController {
         try {
             const posts = await db.query(`
                 SELECT p.*, u.username, u.role, 
-                       pet.name as pet_name, pet.species as pet_species, pet.breed as pet_breed
+                       pet.name as pet_name, pet.species as pet_species, pet.breed as pet_breed,
+                       pet.birth_date as pet_birth_date, pet.weight as pet_weight, 
+                       pet.health_notes as pet_health_notes, pet.photo_url as pet_photo_url,
+                       pet.owner_id as pet_owner_id
                 FROM Post p
                 JOIN "User" u ON p.author_id = u.id
                 LEFT JOIN Pet pet ON p.pet_id = pet.id
