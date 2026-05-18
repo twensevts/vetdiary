@@ -101,19 +101,25 @@ class PetController {
     }
 
     async uploadPhoto(req, res) {
+        console.log('uploadPhoto called:', { petId: req.params.id, userId: req.user?.id, hasFile: !!req.file, fileKeys: req.file ? Object.keys(req.file) : 'no file' });
         try {
             const petId = req.params.id;
             const userId = req.user.id;
 
             const existing = await db.query('SELECT * FROM Pet WHERE id = $1', [petId]);
-            if (existing.rowCount === 0) return res.status(404).json({ message: 'Питомец не найден' });
+            if (existing.rowCount === 0) {
+                console.log('Pet not found:', petId);
+                return res.status(404).json({ message: 'Питомец не найден' });
+            }
             const pet = existing.rows[0];
 
             if (pet.owner_id !== userId && req.user.role !== 'admin') {
+                console.log('Access denied:', { ownerId: pet.owner_id, userId, role: req.user.role });
                 return res.status(403).json({ message: 'Доступ запрещен' });
             }
 
             if (!req.file) {
+                console.log('No file received');
                 return res.status(400).json({ message: 'Файл фото обязателен' });
             }
 
@@ -123,10 +129,11 @@ class PetController {
 
             await db.query('UPDATE Pet SET photo_url = $1 WHERE id = $2', [photoUrl, petId]);
 
+            console.log('Photo uploaded successfully');
             res.json({ message: 'Фото загружено', photo_url: photoUrl });
         } catch (e) {
-            console.error(e);
-            res.status(500).json({ message: 'Ошибка при загрузке фото' });
+            console.error('Error in uploadPhoto:', e);
+            res.status(500).json({ message: 'Ошибка при загрузке фото', error: e.message });
         }
     }
 

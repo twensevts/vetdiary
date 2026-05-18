@@ -3,7 +3,10 @@ const router = new Router();
 const petController = require('../controllers/petController');
 const authMiddleware = require('../middleware/authMiddleware');
 const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
+const upload = multer({ 
+    storage: multer.memoryStorage(), 
+    limits: { fileSize: 10 * 1024 * 1024 } // Increased to 10MB
+});
 
 router.post('/', authMiddleware, petController.createPet);
 router.get('/', authMiddleware, petController.getPets);

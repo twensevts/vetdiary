@@ -41,6 +41,10 @@ export default function Pets() {
         }
     }, [params, pets]);
 
+    const handlePetUpdated = (updatedPet) => {
+        setPets(pets.map(p => p.id === updatedPet.id ? { ...p, photo_url: updatedPet.photo_url } : p));
+    };
+
     return (
         <div className="page-container">
             <div className="card">
@@ -82,7 +86,7 @@ export default function Pets() {
                 onPetAdded={fetchPets}
             />
 
-            <PetDetailModal pet={selectedPet} onClose={() => { setSelectedPet(null); navigate('/pets'); }} onPetDeleted={fetchPets} />
+            <PetDetailModal pet={selectedPet} onClose={() => { setSelectedPet(null); navigate('/pets'); }} onPetDeleted={fetchPets} onPetUpdated={handlePetUpdated} />
         </div>
     );
 }

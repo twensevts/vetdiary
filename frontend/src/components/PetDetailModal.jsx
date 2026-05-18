@@ -37,7 +37,7 @@ const getPetEmoji = (species) => {
 const editInputStyle = {
     width: '100%',
     padding: '10px 12px',
-    border: '1px solid var(--border-color)',
+    border: '1px solid rgba(15, 23, 42, 0.06)',
     borderRadius: '8px',
     fontSize: '14px',
     transition: 'border-color 0.2s, box-shadow 0.2s',
@@ -46,13 +46,13 @@ const editInputStyle = {
 };
 
 const editInputFocusHandler = (e) => {
-    e.target.style.borderColor = 'var(--primary-color)';
-    e.target.style.boxShadow = '0 0 0 3px rgba(32, 178, 170, 0.1)';
+    e.target.style.borderColor = '#06876f';
+    e.target.style.boxShadow = '0 0 0 3px rgba(6, 135, 111, 0.1)';
     e.target.style.background = '#fff';
 };
 
 const editInputBlurHandler = (e) => {
-    e.target.style.borderColor = 'var(--border-color)';
+    e.target.style.borderColor = 'rgba(15, 23, 42, 0.06)';
     e.target.style.boxShadow = 'none';
     e.target.style.background = '#f9fafb';
 };
@@ -61,11 +61,11 @@ const editLabelStyle = {
     display: 'block',
     fontSize: '13px',
     fontWeight: '600',
-    color: 'var(--text-muted)',
+    color: '#475569',
     marginBottom: '6px',
 };
 
-export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
+export default function PetDetailModal({ pet, onClose, onPetDeleted, onPetUpdated }) {
     const normalizePet = (p) => {
         if (!p) return null;
         return {
@@ -164,13 +164,17 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
             const form = new FormData();
             form.append('photo', selectedFile);
             const idToUse = currentPet?.id || pet?.id;
+            console.log('Uploading photo for pet:', idToUse, selectedFile.name);
             const resp = await axios.post(`http://localhost:5000/api/pets/${idToUse}/photo`, form, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'multipart/form-data' }
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
-            setLocalPet({ ...currentPet, photo_url: resp.data.photo_url });
+            console.log('Photo upload response:', resp.data);
+            const updatedPet = { ...currentPet, photo_url: resp.data.photo_url };
+            setLocalPet(updatedPet);
+            if (onPetUpdated) onPetUpdated(updatedPet);
         } catch (e) {
-            console.error('Ошибка загрузки фото', e);
-            alert('Не удалось загрузить фото');
+            console.error('Ошибка загрузки фото', e.response?.data || e.message);
+            alert('Не удалось загрузить фото: ' + (e.response?.data?.message || e.message));
         } finally {
             setUploadingPhoto(false);
         }
@@ -271,7 +275,15 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="pet-detail-modal" onClick={(e) => e.stopPropagation()}>
-                <div className="pet-detail-header" style={{ position: 'relative', overflow: 'hidden' }}>
+                <div className="pet-detail-header" style={{ 
+                    position: 'relative', 
+                    overflow: 'hidden',
+                    height: '200px',
+                    background: 'linear-gradient(90deg, #07A08A, #06876f)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
                     {currentPet.photo_url ? (
                         <img
                             src={currentPet.photo_url}
@@ -279,7 +291,7 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
                             style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0 }}
                         />
                     ) : (
-                        getPetEmoji(currentPet.species)
+                        <div style={{ fontSize: '64px' }}>{getPetEmoji(currentPet.species)}</div>
                     )}
                     {isOwner && (
                         <label
@@ -293,7 +305,7 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
                                 cursor: 'pointer',
                                 fontSize: '13px',
                                 fontWeight: '500',
-                                color: 'var(--text-color)',
+                                color: '#0f1724',
                                 boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
                             }}
                         >
@@ -308,8 +320,8 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
                         </label>
                     )}
                 </div>
-                <div className="pet-detail-body">
-                    <div className="pet-detail-title-row">
+                <div className="pet-detail-body" style={{ padding: '24px' }}>
+                    <div className="pet-detail-title-row" style={{ marginBottom: '16px' }}>
                         {editing ? (
                             <div style={{ flex: 1 }}>
                                 <label style={editLabelStyle}>Кличка</label>
@@ -341,12 +353,6 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
                             )}
                         </div>
                     </div>
-
-                    {!editing && (
-                        <p className="pet-detail-subtitle">
-                            {currentPet.species || 'Вид не указан'}{currentPet.breed ? `, ${currentPet.breed}` : ''}
-                        </p>
-                    )}
 
                     {editing ? (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
@@ -410,47 +416,68 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
                         </div>
                     ) : (
                         <>
-                            <div className="pet-detail-stats">
-                                <div className="pet-detail-stat">
-                                    <span>Возраст:</span>
-                                    <strong>{calculateAge(currentPet.birth_date)}</strong>
+                            <p className="pet-detail-subtitle" style={{ margin: '6px 0 12px 0', color: '#6B7280' }}>
+                                {currentPet.species || 'Вид не указан'}{currentPet.breed ? `, ${currentPet.breed}` : ''}
+                            </p>
+
+                            <div style={{ 
+                                display: 'flex', 
+                                gap: '14px', 
+                                flexWrap: 'wrap',
+                                padding: '16px',
+                                background: 'rgba(248, 250, 252, 0.5)',
+                                borderRadius: '10px'
+                            }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '140px' }}>
+                                    <span style={{ color: '#6B7280', fontSize: '13px' }}>Возраст:</span>
+                                    <strong style={{ fontSize: '16px' }}>{calculateAge(currentPet.birth_date)}</strong>
                                 </div>
-                                <div className="pet-detail-stat">
-                                    <span>Вес:</span>
-                                    <strong>{currentPet.weight ? `${currentPet.weight} кг` : 'Не указан'}</strong>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '140px' }}>
+                                    <span style={{ color: '#6B7280', fontSize: '13px' }}>Вес:</span>
+                                    <strong style={{ fontSize: '16px' }}>{currentPet.weight ? `${currentPet.weight} кг` : 'Не указан'}</strong>
                                 </div>
-                                <div className="pet-detail-stat">
-                                    <span>Дата рождения:</span>
-                                    <strong>{formatDate(currentPet.birth_date)}</strong>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '140px' }}>
+                                    <span style={{ color: '#6B7280', fontSize: '13px' }}>Дата рождения:</span>
+                                    <strong style={{ fontSize: '16px' }}>{formatDate(currentPet.birth_date)}</strong>
                                 </div>
                             </div>
 
-                            <div className="pet-detail-notes">
-                                <span>Заметки:</span>
-                                <p>{currentPet.health_notes || 'Нет заметок о здоровье.'}</p>
+                            <div style={{ marginTop: '16px', fontSize: '14px' }}>
+                                <span style={{ fontWeight: '600', color: '#475569' }}>Заметки:</span>
+                                <p style={{ margin: '8px 0 0 0', color: '#334155' }}>{currentPet.health_notes || 'Нет заметок о здоровье.'}</p>
                             </div>
                         </>
                     )}
 
                     {isOwner && (
                         <div style={{ marginTop: '16px' }}>
-                            <h4>Документы</h4>
+                            <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600' }}>Документы</h4>
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '8px' }}>
-                                <input type="file" onChange={handleFileChange} />
-                                <button className="btn btn-primary" onClick={handleUpload}>Загрузить</button>
+                                <input type="file" onChange={handleFileChange} style={{ fontSize: '14px' }} />
+                                <button className="btn btn-primary" onClick={handleUpload} style={{ whiteSpace: 'nowrap' }}>Загрузить</button>
                             </div>
 
                             <div style={{ marginTop: '10px' }}>
-                                {documents.length === 0 && <p className="muted">Документы отсутствуют</p>}
+                                {documents.length === 0 && <p className="muted" style={{ margin: '0', fontSize: '14px' }}>Документы отсутствуют</p>}
                                 {documents.map((d) => (
-                                    <div key={d.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}>
+                                    <div key={d.id} style={{ 
+                                        display: 'flex', 
+                                        justifyContent: 'space-between', 
+                                        alignItems: 'center', 
+                                        padding: '10px 0',
+                                        borderBottom: '1px solid rgba(15, 23, 42, 0.04)'
+                                    }}>
                                         <div>
-                                            <strong>{d.title}</strong>
-                                            <div className="muted" style={{ fontSize: '12px' }}>{d.file_name}</div>
+                                            <strong style={{ fontSize: '14px' }}>{d.title || 'Без названия'}</strong>
                                         </div>
                                         <div style={{ display: 'flex', gap: '6px' }}>
-                                            <a href={`data:application/octet-stream;base64,${d.file_data}`} download={d.file_name} className="btn btn-link">Скачать</a>
-                                            <button className="btn btn-outline" onClick={() => handleDeleteDocument(d.id)}>Удалить</button>
+                                            <a 
+                                                href={`data:application/octet-stream;base64,${d.file_data}`} 
+                                                download={encodeURIComponent(d.file_name || 'document')} 
+                                                className="btn btn-link"
+                                                style={{ fontSize: '13px' }}
+                                            >Скачать</a>
+                                            <button className="btn btn-outline" onClick={() => handleDeleteDocument(d.id)} style={{ fontSize: '13px', padding: '4px 8px' }}>Удалить</button>
                                         </div>
                                     </div>
                                 ))}
@@ -458,10 +485,22 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted }) {
                         </div>
                     )}
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '18px' }}>
-                        <button type="button" className="btn btn-outline" onClick={onClose}>Закрыть</button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '18px', paddingTop: '16px', borderTop: '1px solid rgba(15, 23, 42, 0.04)' }}>
+                        <button type="button" className="btn btn-outline" onClick={onClose} style={{ fontSize: '14px' }}>Закрыть</button>
                         {isOwner && (
-                            <button type="button" className="btn" style={{ background: '#FEE2E2', color: '#991B1B' }} onClick={handleDeletePet}>Удалить питомца</button>
+                            <button 
+                                type="button" 
+                                className="btn" 
+                                style={{ 
+                                    background: '#FEE2E2', 
+                                    color: '#991B1B',
+                                    fontSize: '14px',
+                                    fontWeight: '500'
+                                }} 
+                                onClick={handleDeletePet}
+                            >
+                                Удалить питомца
+                            </button>
                         )}
                     </div>
                 </div>
