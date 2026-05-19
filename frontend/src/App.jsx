@@ -16,7 +16,6 @@ function AppLayout() {
   const hideNavbarPaths = ['/', '/register', '/forum'];
   const showNavbar = Boolean(token) || (!token && !hideNavbarPaths.includes(location.pathname));
 
-  // Show navbar if logged in (except login/register pages), or show minimal navbar for forum without auth
   const shouldShowNavbar = (Boolean(token) && location.pathname !== '/' && location.pathname !== '/register') || (!token && location.pathname === '/forum');
 
   return (

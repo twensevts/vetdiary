@@ -8,6 +8,7 @@ const getEmoji = (species) => {
     const normalized = (species || '').toLowerCase();
     if (normalized.includes('кош') || normalized.includes('cat')) return '🐱';
     if (normalized.includes('bird') || normalized.includes('пти')) return '🐦';
+    if (normalized.includes('дру') || normalized.includes('other')) return '🐾';
     return '🐶';
 };
 
@@ -42,7 +43,7 @@ export default function Pets() {
     }, [params, pets]);
 
     const handlePetUpdated = (updatedPet) => {
-        setPets(pets.map(p => p.id === updatedPet.id ? { ...p, photo_url: updatedPet.photo_url } : p));
+        setPets(pets.map(p => p.id === updatedPet.id ? { ...p, ...updatedPet } : p));
     };
 
     return (

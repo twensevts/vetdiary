@@ -89,6 +89,8 @@ export default function Dashboard() {
     const getEmoji = (species) => {
         const normalized = (species || '').toLowerCase();
         if (normalized.includes('кош') || normalized.includes('cat')) return '🐱';
+        if (normalized.includes('пти') || normalized.includes('bird')) return '🐦';
+        if (normalized.includes('дру') || normalized.includes('other')) return '🐾';
         return '🐶';
     };
 
@@ -283,14 +285,12 @@ export default function Dashboard() {
                     <p className="muted">Добавьте питомца, чтобы увидеть краткую статистику.</p>
                 )}
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div className="mini-pets-row">
                     {recentPets.map((pet) => (
-                        <div key={pet.id} className="pet-item" style={{ cursor: 'pointer' }} onClick={() => setSelectedPet(pet)}>
-                            <div className="pet-avatar">{getEmoji(pet.species)}</div>
-                            <div>
-                                <h4 className="item-title">{pet.name}</h4>
-                                <p className="muted">{pet.species}{pet.breed ? `, ${pet.breed}` : ''}</p>
-                            </div>
+                        <div key={pet.id} className="mini-pet-card" onClick={() => setSelectedPet(pet)}>
+                            <div className="mini-pet-emoji">{getEmoji(pet.species)}</div>
+                            <div className="mini-pet-name">{pet.name}</div>
+                            <div className="mini-pet-sub muted">{pet.species}{pet.breed ? `, ${pet.breed}` : ''}</div>
                         </div>
                     ))}
                 </div>
@@ -299,6 +299,9 @@ export default function Dashboard() {
             <PetDetailModal
                 pet={selectedPet}
                 onClose={() => setSelectedPet(null)}
+                onPetUpdated={(updatedPet) => {
+                    setPets(pets.map(p => p.id === updatedPet.id ? { ...p, ...updatedPet } : p));
+                }}
             />
         </div>
     );

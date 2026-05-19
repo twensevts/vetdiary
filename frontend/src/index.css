@@ -625,6 +625,55 @@ body {
   color: var(--primary-600)
 }
 
+.mini-pets-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.mini-pet-card {
+  width: 140px;
+  min-width: 120px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.9));
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.mini-pet-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(7,24,40,0.08);
+}
+
+.mini-pet-emoji {
+  font-size: 34px;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(6, 135, 111, 0.06), rgba(6, 135, 111, 0.02));
+  color: var(--primary-600);
+}
+
+.mini-pet-name {
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+}
+
+.mini-pet-sub {
+  font-size: 12px;
+  text-align: center;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;

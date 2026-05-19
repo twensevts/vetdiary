@@ -48,7 +48,33 @@ const getPetEmoji = (species) => {
     if (normalized.includes('cat')) return '🐱';
     if (normalized.includes('пти')) return '🐦';
     if (normalized.includes('bird')) return '🐦';
+    if (normalized.includes('дру') || normalized.includes('other')) return '🐾';
     return '🐶';
+};
+
+const DOG_BREEDS = [
+    'Лабрадор', 'Немецкая овчарка', 'Бульдог', 'Пудель', 'Бигль',
+    'Хаски', 'Корги', 'Такса', 'Чихуахуа', 'Шпиц', 'Йоркширский терьер',
+    'Ротвейлер', 'Доберман', 'Боксёр', 'Далматин'
+];
+
+const CAT_COLORS = [
+    'Чёрный', 'Белый', 'Рыжий', 'Серый', 'Полосатый',
+    'Трёхцветный', 'Дымчатый', 'Кремовый', 'Шоколадный'
+];
+
+const getBreedOptions = (species) => {
+    const norm = (species || '').toLowerCase();
+    if (norm.includes('соб') || norm.includes('dog')) return DOG_BREEDS;
+    if (norm.includes('кош') || norm.includes('cat')) return CAT_COLORS;
+    return [];
+};
+
+const getBreedLabel = (species) => {
+    const norm = (species || '').toLowerCase();
+    if (norm.includes('соб') || norm.includes('dog')) return 'Порода';
+    if (norm.includes('кош') || norm.includes('cat')) return 'Цвет';
+    return 'Цвет/Порода';
 };
 
 const editInputStyle = {
@@ -237,6 +263,7 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted, onPetUpdate
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             setLocalPet(resp.data);
+            if (onPetUpdated) onPetUpdated(resp.data);
             setEditing(false);
         } catch (e) {
             console.error('Ошибка при сохранении', e);
@@ -244,6 +271,19 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted, onPetUpdate
         } finally {
             setSaving(false);
         }
+    };
+
+    const handleClose = async () => {
+        if (editing) {
+            // попытка сохранить изменения перед закрытием
+            try {
+                await handleSave();
+            } catch (e) {
+                // Если не удалось сохранить — всё равно закрываем, но можно уведомить
+                console.error('Не удалось сохранить при закрытии', e);
+            }
+        }
+        if (onClose) onClose();
     };
 
     const handleFileChange = (e) => {
@@ -298,7 +338,7 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted, onPetUpdate
     };
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={handleClose}>
             <div className="pet-detail-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="pet-detail-body" style={{ padding: '24px' }}>
                     <div className="pet-detail-layout">
@@ -332,13 +372,61 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted, onPetUpdate
                                         </div>
                                         <div>
                                             <label style={editLabelStyle}>Порода / Цвет</label>
-                                            <input
-                                                style={editInputStyle}
-                                                value={currentPet.breed || ''}
-                                                onChange={(e) => setLocalPet({ ...currentPet, breed: e.target.value })}
-                                                onFocus={editInputFocusHandler}
-                                                onBlur={editInputBlurHandler}
-                                            />
+                                            {(() => {
+                                                const breedOptions = getBreedOptions(currentPet.species);
+                                                const isOther = (currentPet.species || '').toLowerCase().includes('дру');
+                                                if (isOther || breedOptions.length === 0) {
+                                                    return (
+                                                        <input
+                                                            style={editInputStyle}
+                                                            value={currentPet.breed || ''}
+                                                            onChange={(e) => setLocalPet({ ...currentPet, breed: e.target.value })}
+                                                            onFocus={editInputFocusHandler}
+                                                            onBlur={editInputBlurHandler}
+                                                        />
+                                                    );
+                                                }
+
+                                                const currentBreed = currentPet.breed || '';
+                                                const selected = breedOptions.includes(currentBreed) ? currentBreed : (currentBreed === '' ? '' : '__custom__');
+
+                                                return (
+                                                    <>
+                                                        <select
+                                                            className="form-control"
+                                                            value={selected}
+                                                            onChange={(e) => {
+                                                                const v = e.target.value;
+                                                                if (v === '__custom__') {
+                                                                    setLocalPet({ ...currentPet, breed: '' });
+                                                                } else {
+                                                                    setLocalPet({ ...currentPet, breed: v });
+                                                                }
+                                                            }}
+                                                            style={{ ...editInputStyle, padding: '8px 12px' }}
+                                                            onFocus={editInputFocusHandler}
+                                                            onBlur={editInputBlurHandler}
+                                                        >
+                                                            <option value="">Не выбрано</option>
+                                                            {breedOptions.map(opt => (
+                                                                <option key={opt} value={opt}>{opt}</option>
+                                                            ))}
+                                                            <option value="__custom__">Другое (ввести вручную)</option>
+                                                        </select>
+                                                        {selected === '__custom__' && (
+                                                            <input
+                                                                type="text"
+                                                                style={{ ...editInputStyle, marginTop: '8px' }}
+                                                                placeholder={getBreedLabel(currentPet.species)}
+                                                                value={currentPet.breed || ''}
+                                                                onChange={(e) => setLocalPet({ ...currentPet, breed: e.target.value })}
+                                                                onFocus={editInputFocusHandler}
+                                                                onBlur={editInputBlurHandler}
+                                                            />
+                                                        )}
+                                                    </>
+                                                );
+                                            })()}
                                         </div>
                                     </div>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -503,7 +591,7 @@ export default function PetDetailModal({ pet, onClose, onPetDeleted, onPetUpdate
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '18px', paddingTop: '16px', borderTop: '1px solid rgba(15, 23, 42, 0.04)' }}>
-                        <button type="button" className="btn btn-outline" onClick={onClose} style={{ fontSize: '14px' }}>Закрыть</button>
+                        <button type="button" className="btn btn-outline" onClick={handleClose} style={{ fontSize: '14px' }}>Закрыть</button>
                         <div style={{ display: 'flex', gap: '8px' }}>
                             {isOwner && (
                                 editing ? (
