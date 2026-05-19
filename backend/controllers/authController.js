@@ -125,6 +125,11 @@ class AuthController {
                 return res.status(400).json({ message: `Введен неверный пароль` });
             }
 
+            // Проверка, не заблокирован ли аккаунт
+            if (user.rows[0].is_active === false) {
+                return res.status(403).json({ message: 'Аккаунт заблокирован' });
+            }
+
             // Проверка статуса ветеринара
             if (user.rows[0].role === 'vet' && user.rows[0].vet_status === 'pending') {
                 return res.status(403).json({ message: 'Ваш аккаунт ветеринара ожидает проверки администратором' });

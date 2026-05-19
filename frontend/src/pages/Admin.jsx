@@ -81,14 +81,18 @@ export default function Admin() {
     };
 
     const tabStyle = (active) => ({
-        padding: '10px 20px',
+        padding: '12px 24px',
         border: 'none',
-        borderBottom: active ? '3px solid var(--primary-color)' : '3px solid transparent',
-        background: 'transparent',
+        borderBottom: active ? '3px solid var(--primary-600)' : '3px solid transparent',
+        background: active ? 'rgba(6, 135, 111, 0.06)' : 'transparent',
         cursor: 'pointer',
-        fontWeight: active ? '600' : '400',
-        color: active ? 'var(--primary-color)' : 'var(--text-muted)',
-        fontSize: '14px'
+        fontWeight: active ? '700' : '500',
+        color: active ? 'var(--primary-600)' : 'var(--muted-500)',
+        fontSize: '15px',
+        borderTopLeftRadius: '8px',
+        borderTopRightRadius: '8px',
+        transition: 'all 0.2s',
+        outline: 'none'
     });
 
     return (
@@ -108,7 +112,7 @@ export default function Admin() {
                 </div>
             )}
 
-            <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', borderBottom: '2px solid rgba(15, 23, 42, 0.06)', marginBottom: '20px', gap: '4px' }}>
                 <button style={tabStyle(tab === 'vet-requests')} onClick={() => setTab('vet-requests')}>
                     Заявки ветеринаров
                 </button>

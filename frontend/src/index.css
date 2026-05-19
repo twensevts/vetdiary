@@ -828,6 +828,24 @@ tbody tr {
   border-top: 1px solid rgba(15, 23, 42, 0.04);
 }
 
+.vet-comment-badge {
+  display: inline-block;
+  margin-left: 8px;
+  background: #059669;
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.comment-content.comment-vet {
+  background: linear-gradient(180deg, #F0FFF4, #ECFDF5);
+  border-left: 3px solid #059669;
+  padding: 10px;
+  border-radius: 8px;
+}
+
 .comment-thread-item--nested {
   margin-left: clamp(0px, 10vw, 40px);
 }

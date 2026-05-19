@@ -49,7 +49,7 @@ class CommentController {
                         VALUES ($1, $2, $3, $4)
                         RETURNING id, post_id, author_id, content, parent_id, created_at
                    )
-                   SELECT inserted.*, u.username
+                   SELECT inserted.*, u.username, u.role
                    FROM inserted
                    JOIN "User" u ON inserted.author_id = u.id`
                 : `WITH inserted AS (
@@ -57,7 +57,7 @@ class CommentController {
                         VALUES ($1, $2, $3)
                         RETURNING id, post_id, author_id, content, parent_id, created_at
                    )
-                   SELECT inserted.*, u.username
+                   SELECT inserted.*, u.username, u.role
                    FROM inserted
                    JOIN "User" u ON inserted.author_id = u.id`;
 
@@ -77,7 +77,7 @@ class CommentController {
             const { postId } = req.params;
             const commentTable = await detectCommentTable();
             const comments = await db.query(
-                `SELECT c.*, u.username FROM ${commentTable} c JOIN "User" u ON c.author_id = u.id WHERE c.post_id = $1 ORDER BY c.created_at ASC`,
+                `SELECT c.*, u.username, u.role FROM ${commentTable} c JOIN "User" u ON c.author_id = u.id WHERE c.post_id = $1 ORDER BY c.created_at ASC`,
                 [postId]
             );
             res.json(comments.rows);

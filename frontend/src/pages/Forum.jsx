@@ -390,6 +390,9 @@ export default function Forum() {
                                         <div className="comment-author-row">
                                             <div>
                                                 <span className="comment-author-info">{c.username}</span>
+                                                {c.role === 'vet' && (
+                                                    <span className="vet-comment-badge" title="Верифицированный ветеринар">Вет.</span>
+                                                )}
                                                 <span className="comment-timestamp"> {new Date(c.created_at).toLocaleString()}</span>
                                             </div>
                                             <div className="comment-actions">
@@ -397,7 +400,7 @@ export default function Forum() {
                                                 {canDeleteComment(c) && <button className="btn btn-outline" style={{ fontSize: '12px', padding: '4px 8px' }} onClick={() => handleDeleteComment(post.id, c.id)}>Удалить</button>}
                                             </div>
                                         </div>
-                                        <div className="comment-content">{c.content}</div>
+                                        <div className={`comment-content ${c.role === 'vet' ? 'comment-vet' : ''}`}>{c.content}</div>
                                         {showReply && token && canNestDeeper && (
                                             <div style={{ marginTop: 8, marginBottom: 8 }}>
                                                 <CommentBox onSubmit={(text, reset) => {
